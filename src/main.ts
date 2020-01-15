@@ -5,17 +5,24 @@ import VueSocketIO from "vue-socket.io";
 
 Vue.config.productionTip = false;
 
-Vue.use(new VueSocketIO({
-  connection: `http://localhost:3003/chat`,
-    options: { useConnectionNamespace: true },
-    debug: false,
-}));
+Vue.use(
+  new VueSocketIO({
+    connection: `http://localhost:3003/chat`,
+    options: {
+      useConnectionNamespace: true,
+      namespaceName: "chat"
+    },
+    debug: true
+  })
+);
 
-Vue.use(new VueSocketIO({
-  connection: `http://localhost:3003/werewolves`,
+Vue.use(
+  new VueSocketIO({
+    connection: `http://localhost:3003/werewolves`,
     options: { useConnectionNamespace: true },
-    debug: false,
-}));
+    debug: true
+  })
+);
 
 new Vue({
   router,

@@ -116,6 +116,16 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
+
+  created() {
+    this.$socket.chat.on("connect", () => console.log("connected chat"));
+
+    this.sockets.chat.subscribe("messages", (data: any) => {
+      console.log("on messages", data);
+    });
+
+    this.$socket.chat.emit("join", { room: "wolf1" });
+  }
 }
 </script>
 
