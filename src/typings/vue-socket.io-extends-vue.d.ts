@@ -1,8 +1,8 @@
-import Vue from 'vue';
+import Vue from "vue";
 import SocketIO from "socket.io";
 
 interface SocketNamespace {
-	[thingName: string]: SocketIO.Server
+  [thingName: string]: SocketIO.Server;
 }
 
 interface SocketSubscriptions {
@@ -11,18 +11,18 @@ interface SocketSubscriptions {
 }
 
 interface SocketSubscriptionsNamespace {
-  [thingName: string]: SocketSubscriptions
+  [thingName: string]: SocketSubscriptions;
 }
 
-declare module 'vue/types/vue' {
+declare module "vue/types/vue" {
   interface Vue {
-	sockets: SocketSubscriptionsNamespace;
-	$socket: SocketNamespace;
+    sockets: SocketSubscriptionsNamespace;
+    $socket: SocketNamespace;
   }
 }
 
-declare module 'vue/types/options' {
-	interface ComponentOptions<V extends Vue> {
-		socket?: any;
-	}
+declare module "vue/types/options" {
+  interface ComponentOptions<V extends Vue> {
+    socket?: any;
+  }
 }
