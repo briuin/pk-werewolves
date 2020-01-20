@@ -9,6 +9,7 @@
               outlined
               hide-details
               v-model="name"
+              @keydown.enter="confirm()"
             ></v-text-field>
           </v-col>
         </v-row>

@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
-        <span>狼人殺</span>
+        <span @click="goToHome()">狼人殺</span>
       </div>
 
       <v-spacer></v-spacer>
@@ -50,6 +50,13 @@ export default class App extends Vue {
   showCancelableDialog() {
     this.nameDialogOptions.cancelable = true;
     this.showNameDialog = true;
+  }
+
+  goToHome() {
+    if (this.$route.path === "/") {
+      return;
+    }
+    this.$router.push("/");
   }
 }
 </script>
