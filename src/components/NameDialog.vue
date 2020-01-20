@@ -27,6 +27,21 @@
               </span>
             </template>
           </v-btn>
+          <v-btn
+            v-if="options.cancelable"
+            class="ma-2"
+            :loading="false"
+            :disabled="false"
+            color="error"
+            @click="$emit('cancel')"
+          >
+            Cancel
+            <template v-slot:loader>
+              <span class="custom-loader">
+                <v-icon light>cached</v-icon>
+              </span>
+            </template>
+          </v-btn>
         </v-row>
       </v-container>
     </v-form>
@@ -38,6 +53,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class NameDialog extends Vue {
+  @Prop() options: any;
   name = "";
   confirm() {
     if (!this.name && this.name.length > 30) {
@@ -60,8 +76,9 @@ export default class NameDialog extends Vue {
   align-items: center;
 
   .modal-container {
+    max-width: 280px;
     background: white;
-    padding: 20px 50px;
+    padding: 20px 35px;
   }
 
   .row {

@@ -1,18 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <v-container>
+    <v-btn color="success" :disabled="isCreatingGame" dark @click="createGame()"
+      >Create Game</v-btn
+    >
+    <GameList />
+  </v-container>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import GameList from "@/components/GameList.vue";
 
-export default {
-  name: "home",
+@Component({
   components: {
-    HelloWorld
+    GameList
   }
-};
+})
+export default class Home extends Vue {
+  isCreatingGame = false;
+
+  createGame() {
+    this.isCreatingGame = true;
+  }
+}
 </script>
