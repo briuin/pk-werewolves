@@ -11,6 +11,10 @@ class PlayerService {
     localStorage.setItem("werewolvesname", name);
     this.name$.next(name);
   }
+
+  public getName() {
+    return this.name$.value;
+  }
 }
 
 const service = new PlayerService();

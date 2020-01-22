@@ -17,9 +17,9 @@
           <td>{{ game.id }}</td>
           <td>{{ game.owner }}</td>
           <td>
-            {{ game.totalPlayerCount }}
+            {{ game.players.length }}
             /
-            {{ game.totalPlayerCount }}
+            {{ game.players.length }}
             <v-btn
               class="join-button"
               color="success"
@@ -39,6 +39,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PlayerService from "@/services/player";
 
 @Component
 export default class GameList extends Vue {
@@ -46,7 +47,18 @@ export default class GameList extends Vue {
   selectedGame = null;
 
   joinGame(gameId: number) {
-    this.$router.push(`/game/${gameId}`);
+    if (
+      this.games
+        .find(x => x.id === gameId)
+        .players.find((x: any) => x.name === PlayerService.getName())
+    ) {
+      this.$router.push(`/game/${gameId}`);
+      return;
+    }
+    this.$socket.werewolves.emit("join", {
+      gameId,
+      playerName: PlayerService.getName()
+    });
   }
 }
 </script>

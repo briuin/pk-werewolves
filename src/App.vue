@@ -28,6 +28,7 @@
 <script lang="ts">
 import NameDialog from "@/components/NameDialog.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PlayerService from "@/services/player";
 
 @Component({
   components: {
@@ -35,14 +36,14 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   }
 })
 export default class App extends Vue {
-  playerName = localStorage.getItem("werewolvesname");
+  playerName = "";
   showNameDialog = !this.playerName;
   nameDialogOptions = {
     cancelable: false
   };
 
   setName(name: string) {
-    localStorage.setItem("werewolvesname", name);
+    PlayerService.setName(name);
     this.playerName = name;
     this.showNameDialog = false;
   }
@@ -57,6 +58,13 @@ export default class App extends Vue {
       return;
     }
     this.$router.push("/");
+  }
+
+  protected created() {
+    PlayerService.name$.subscribe(x => {
+      this.playerName = x;
+      this.showNameDialog = !x;
+    });
   }
 }
 </script>

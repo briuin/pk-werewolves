@@ -39,7 +39,9 @@ export default class Home extends Vue {
   games: any[] = [];
 
   get joinedGame() {
-    return this.games.find(x => x.owner === this.playerName);
+    return this.games.find(x =>
+      x.players.find((y: any) => y.name === this.playerName)
+    );
   }
 
   backToGame() {
@@ -59,6 +61,10 @@ export default class Home extends Vue {
 
     this.sockets.werewolves.subscribe("games", (games: any) => {
       this.games = games;
+    });
+
+    this.sockets.werewolves.subscribe("goto", (gameId: any) => {
+      this.$router.push(`/game/${gameId}`);
     });
     this.$socket.werewolves.emit("getGames");
   }
