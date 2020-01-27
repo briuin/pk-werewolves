@@ -64,6 +64,7 @@ export default class App extends Vue {
     PlayerService.name$.subscribe(x => {
       this.playerName = x;
       this.showNameDialog = !x;
+      this.$socket.werewolves.emit("rejoinSession", { name: x });
     });
   }
 }

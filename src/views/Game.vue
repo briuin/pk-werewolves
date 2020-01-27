@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout>
-      <div>
+      <div v-if="!isStarted">
         <v-btn color="success" v-if="!seated" dark @click="sit()">坐下</v-btn>
         <v-btn color="warning" v-if="seated" dark @click="stand()">站立</v-btn>
         <v-btn color="primary" v-if="isOwner" dark @click="start()">開始</v-btn>
@@ -71,6 +71,7 @@ export default class Game extends Vue {
   items: any[] = [];
   seated = false;
   owner = "";
+  isStarted = false;
 
   get isOwner() {
     return this.owner === PlayerService.getName();
@@ -92,7 +93,14 @@ export default class Game extends Vue {
 
   protected created() {
     this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
+      if (data.error) {
+        this.$router.push("/");
+        return;
+      }
       this.owner = data.owner;
+      this.seated = data.seats.find(
+        (x: any) => x.player.name === PlayerService.getName()
+      );
     });
     this.sockets.werewolves.subscribe("message", (data: any) => {
       this.items.push(
@@ -107,6 +115,13 @@ export default class Game extends Vue {
     this.id = this.$route.params.id;
     this.items = [{ header: `房號 ${this.id}` }];
     this.$socket.werewolves.emit("gamedetails", { id: this.id });
+    this.subscribeGameStart();
+  }
+
+  private subscribeGameStart() {
+    this.sockets.werewolves.subscribe("start", () => {
+      this.isStarted = true;
+    });
   }
 }
 </script>
