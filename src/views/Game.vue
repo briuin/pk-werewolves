@@ -4,7 +4,36 @@
       <div v-if="!isStarted">
         <v-btn color="success" v-if="!seated" dark @click="sit()">坐下</v-btn>
         <v-btn color="warning" v-if="seated" dark @click="stand()">站立</v-btn>
-        <v-btn color="primary" v-if="isOwner" dark @click="start()">開始</v-btn>
+        <v-btn color="success" v-if="seated && !isReady" dark @click="ready()"
+          >準備</v-btn
+        >
+        <v-btn
+          color="primary"
+          :disabled="!isAllSeatedPlayersReady"
+          v-if="isOwner"
+          @click="start()"
+          >開始</v-btn
+        >
+      </div>
+    </v-layout>
+    <v-layout>
+      <div class="full-width">
+        <v-expansion-panels>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
+              {{ players.length - seatedPlayers.length }}
+              <template v-slot:actions>
+                <v-icon color="primary">$expand</v-icon>
+              </template>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <p>已準備人數：{{ isReadyPlayers.length }}</p>
+              <p>坐下人數：{{ seatedPlayers.length }}</p>
+              <p>旁觀人數：{{ players.length - seatedPlayers.length }}</p>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </div>
     </v-layout>
     <v-card max-width="900" class="mx-auto">
@@ -72,9 +101,23 @@ export default class Game extends Vue {
   seated = false;
   owner = "";
   isStarted = false;
+  players = [];
+  seatedPlayers = [];
+  isReadyPlayers: any[] = [];
 
   get isOwner() {
     return this.owner === PlayerService.getName();
+  }
+
+  get isReady() {
+    return this.isReadyPlayers.find(x => x.name === PlayerService.getName());
+  }
+
+  get isAllSeatedPlayersReady() {
+    return (
+      this.isReadyPlayers.length == this.seatedPlayers.length &&
+      this.seatedPlayers.length > 0
+    );
   }
 
   sit() {
@@ -88,7 +131,14 @@ export default class Game extends Vue {
   }
 
   start() {
+    if (!this.isAllSeatedPlayersReady) {
+      return;
+    }
     this.$socket.werewolves.emit("start");
+  }
+
+  ready() {
+    this.$socket.werewolves.emit("ready");
   }
 
   protected created() {
@@ -116,6 +166,7 @@ export default class Game extends Vue {
     this.items = [{ header: `房號 ${this.id}` }];
     this.$socket.werewolves.emit("gamedetails", { id: this.id });
     this.subscribeGameStart();
+    this.subscribePlayers();
   }
 
   private subscribeGameStart() {
@@ -123,5 +174,19 @@ export default class Game extends Vue {
       this.isStarted = true;
     });
   }
+
+  private subscribePlayers() {
+    this.sockets.werewolves.subscribe("players", (data: any) => {
+      this.players = data.players;
+      this.seatedPlayers = data.seated;
+      this.isReadyPlayers = data.ready;
+    });
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.full-width {
+  width: 100%;
+}
+</style>
