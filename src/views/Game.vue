@@ -99,6 +99,12 @@
       </template>
     </v-bottom-navigation>
     <RoundWolf v-if="showRoundWolf" :seats="seatedPlayers" :wolves="wolves" />
+    <GameOver
+      :seats="result.seats"
+      :isWinner="result.isWinner"
+      :gameWin="result.gameWin"
+      v-if="result"
+    />
   </v-container>
 </template>
 
@@ -107,10 +113,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
 import { Card } from "@/enums/card";
 import RoundWolf from "@/components/round/Wolf.vue";
+import GameOver from "@/components/round/GameOver.vue";
 
 @Component({
   components: {
-    RoundWolf
+    RoundWolf,
+    GameOver
   }
 })
 export default class Game extends Vue {
@@ -122,13 +130,15 @@ export default class Game extends Vue {
   owner = "";
   isStarted = false;
   players = [];
-  seatedPlayers = [];
+  seatedPlayers: any[] = [];
   isReadyPlayers: any[] = [];
   card: Card = Card.Unknown;
   showRoundWolf = false;
   wolves: any[] = [];
   title = "";
   time = 0;
+  result: any = null;
+  seatNo = 0;
 
   get isOwner() {
     return this.owner === PlayerService.getName();
@@ -200,9 +210,9 @@ export default class Game extends Vue {
 
   private subscribeGameStart() {
     this.sockets.werewolves.subscribe("start", (data: any) => {
-      console.log("start");
       this.isStarted = true;
       this.card = data.card;
+      this.seatNo = data.seatNo;
     });
   }
 
@@ -236,7 +246,12 @@ export default class Game extends Vue {
 
   private subscribeGameOver() {
     this.sockets.werewolves.subscribe("gameover", (data: any) => {
-      console.log("gameover", data);
+      console.log(this.seatNo);
+      this.result = {
+        seats: data.seats,
+        gameWin: data.gameWin,
+        isWinner: !!data.winners.find((x: any) => x === this.seatNo)
+      };
     });
   }
 }
