@@ -36,6 +36,9 @@
         </v-expansion-panels>
       </div>
     </v-layout>
+    <v-layout v-if="isStarted">
+      <div>身份：{{ card }}</div>
+    </v-layout>
     <v-card max-width="900" class="mx-auto">
       <v-toolbar v-if="false" color="cyan" dark>
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
@@ -85,14 +88,31 @@
         </template>
       </v-list>
     </v-card>
+    <v-bottom-navigation horizontal app>
+      <template>
+        <v-btn>
+          <span>{{ title }}</span>
+        </v-btn>
+        <v-btn v-if="time">
+          <span>{{ time }}</span>
+        </v-btn>
+      </template>
+    </v-bottom-navigation>
+    <RoundWolf v-if="showRoundWolf" :seats="seatedPlayers" :wolves="wolves" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
+import { Card } from "@/enums/card";
+import RoundWolf from "@/components/round/Wolf.vue";
 
-@Component
+@Component({
+  components: {
+    RoundWolf
+  }
+})
 export default class Game extends Vue {
   id = "";
   name = "";
@@ -104,6 +124,11 @@ export default class Game extends Vue {
   players = [];
   seatedPlayers = [];
   isReadyPlayers: any[] = [];
+  card: Card = Card.Unknown;
+  showRoundWolf = false;
+  wolves: any[] = [];
+  title = "";
+  time = 0;
 
   get isOwner() {
     return this.owner === PlayerService.getName();
@@ -153,6 +178,7 @@ export default class Game extends Vue {
       );
     });
     this.sockets.werewolves.subscribe("message", (data: any) => {
+      console.log("message", data);
       this.items.push(
         {
           name: data.name,
@@ -167,11 +193,16 @@ export default class Game extends Vue {
     this.$socket.werewolves.emit("gamedetails", { id: this.id });
     this.subscribeGameStart();
     this.subscribePlayers();
+    this.subscribeRound();
+    this.subscribeInfo();
+    this.subscribeGameOver();
   }
 
   private subscribeGameStart() {
-    this.sockets.werewolves.subscribe("start", () => {
+    this.sockets.werewolves.subscribe("start", (data: any) => {
+      console.log("start");
       this.isStarted = true;
+      this.card = data.card;
     });
   }
 
@@ -182,11 +213,47 @@ export default class Game extends Vue {
       this.isReadyPlayers = data.ready;
     });
   }
+
+  private subscribeRound() {
+    this.sockets.werewolves.subscribe("round", (data: any) => {
+      if (data.target === "wolf") {
+        if (this.card === Card.Wolf) {
+          this.wolves = data.wolves || [];
+          this.showRoundWolf = true;
+        }
+      } else {
+        this.showRoundWolf = false;
+      }
+    });
+  }
+
+  private subscribeInfo() {
+    this.sockets.werewolves.subscribe("info", (data: any) => {
+      this.title = data.title;
+      this.time = data.time;
+    });
+  }
+
+  private subscribeGameOver() {
+    this.sockets.werewolves.subscribe("gameover", (data: any) => {
+      console.log("gameover", data);
+    });
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .full-width {
   width: 100%;
+}
+
+.v-bottom-navigation button {
+  &::before {
+    background: none !important;
+    opacity: 1;
+  }
+  span {
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
 }
 </style>
