@@ -64,29 +64,5 @@ export default class GameOver extends Vue {
     background: white;
     padding: 20px 35px;
   }
-
-  .vote-option {
-    height: 60px;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
-    .seat-no {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 16px;
-      border: 1px solid black;
-      cursor: pointer;
-    }
-  }
-
-  .wolf {
-    background: red;
-    color: white;
-  }
 }
 </style>

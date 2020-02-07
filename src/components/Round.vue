@@ -8,6 +8,7 @@
       v-if="shouldShow(RoundModal.GameOver)"
       @close="end()"
     />
+    <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
   </div>
 </template>
 
@@ -15,13 +16,15 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Wolf from "@/components/round/Wolf.vue";
 import GameOver from "@/components/round/GameOver.vue";
+import DayBreaks from "@/components/round/DayBreaks.vue";
 import RoundService from "@/services/round";
 import { RoundModal } from "@/enums/round-modal";
 
 @Component({
   components: {
     Wolf,
-    GameOver
+    GameOver,
+    DayBreaks
   }
 })
 export default class Round extends Vue {

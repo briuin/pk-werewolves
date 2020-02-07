@@ -6,12 +6,20 @@ export default class Card {
   protected roundModalMapping: { round: string; action: Function }[] = [];
 
   constructor() {
-    this.roundModalMapping.push({
-      round: "gameover",
-      action: (data: any) => {
-        RoundService.showModal(RoundModal.GameOver, data);
+    this.roundModalMapping.push(
+      {
+        round: "daybreaks",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.DayBreaks, data);
+        }
+      },
+      {
+        round: "gameover",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.GameOver, data);
+        }
       }
-    });
+    );
   }
 
   public onRound(round: string, data = {}) {
