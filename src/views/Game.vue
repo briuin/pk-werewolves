@@ -1,19 +1,6 @@
 <template>
   <v-container>
     <v-layout>
-      <div v-if="!isStarted">
-        <v-btn color="success" v-if="!seated" dark @click="sit()">坐下</v-btn>
-        <v-btn color="warning" v-if="seated" dark @click="stand()">站立</v-btn>
-        <v-btn color="success" v-if="seated && !isReady" dark @click="ready()">準備</v-btn>
-        <v-btn
-          color="primary"
-          :disabled="!isAllSeatedPlayersReady"
-          v-if="isOwner"
-          @click="start()"
-        >開始</v-btn>
-      </div>
-    </v-layout>
-    <v-layout>
       <div class="full-width">
         <v-expansion-panels>
           <v-expansion-panel>
@@ -93,16 +80,7 @@
         </template>
       </v-list>
     </v-card>
-    <v-bottom-navigation horizontal app>
-      <template>
-        <v-btn>
-          <span>{{ title }}</span>
-        </v-btn>
-        <v-btn v-if="time">
-          <span>{{ time }}</span>
-        </v-btn>
-      </template>
-    </v-bottom-navigation>
+    <BottomNavigation :isGameStarted="isStarted" />
   </v-container>
 </template>
 
@@ -110,16 +88,17 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
 import RoundService from "@/services/round";
-// import { Card } from "@/enums/card";
 import Card from "@/models/card";
 import CardFactory from "@/models/card-factory";
 import RoundWolf from "@/components/round/Wolf.vue";
 import GameOver from "@/components/round/GameOver.vue";
+import BottomNavigation from "@/components/BottomNavigation.vue";
 
 @Component({
   components: {
     RoundWolf,
-    GameOver
+    GameOver,
+    BottomNavigation
   }
 })
 export default class Game extends Vue {
@@ -127,7 +106,6 @@ export default class Game extends Vue {
   name = "";
 
   messages: any[] = [];
-  seated = false;
   owner = "";
   isStarted = false;
   players = [];
@@ -135,44 +113,11 @@ export default class Game extends Vue {
   isReadyPlayers: any[] = [];
   card: Card = new Card();
   cards: string[] = [];
-  title = "";
-  time = 0;
   seatNo = 0;
+  seated = false;
 
   get isOwner() {
     return this.owner === PlayerService.getName();
-  }
-
-  get isReady() {
-    return this.isReadyPlayers.find(x => x.name === PlayerService.getName());
-  }
-
-  get isAllSeatedPlayersReady() {
-    return (
-      this.isReadyPlayers.length == this.seatedPlayers.length &&
-      this.seatedPlayers.length > 0
-    );
-  }
-
-  sit() {
-    this.$socket.werewolves.emit("sit");
-    this.seated = true;
-  }
-
-  stand() {
-    this.$socket.werewolves.emit("stand");
-    this.seated = false;
-  }
-
-  start() {
-    if (!this.isAllSeatedPlayersReady) {
-      return;
-    }
-    this.$socket.werewolves.emit("start");
-  }
-
-  ready() {
-    this.$socket.werewolves.emit("ready");
   }
 
   reset() {
@@ -187,9 +132,6 @@ export default class Game extends Vue {
         return;
       }
       this.owner = data.owner;
-      this.seated = data.seats.find(
-        (x: any) => x.player.name === PlayerService.getName()
-      );
     });
     this.sockets.werewolves.subscribe("message", (data: any) => {
       this.messages.push(
@@ -207,7 +149,6 @@ export default class Game extends Vue {
     this.subscribeGameStart();
     this.subscribePlayers();
     this.subscribeRound();
-    this.subscribeInfo();
     this.subscribeNewGame();
     this.subscribeCards();
   }
@@ -234,13 +175,6 @@ export default class Game extends Vue {
     });
   }
 
-  private subscribeInfo() {
-    this.sockets.werewolves.subscribe("info", (data: any) => {
-      this.title = data.title;
-      this.time = data.time;
-    });
-  }
-
   private subscribeNewGame() {
     this.sockets.werewolves.subscribe("newgame", () => {
       this.card = new Card();
@@ -258,15 +192,5 @@ export default class Game extends Vue {
 <style lang="scss" scoped>
 .full-width {
   width: 100%;
-}
-
-.v-bottom-navigation button {
-  &::before {
-    background: none !important;
-    opacity: 1;
-  }
-  span {
-    color: rgba(0, 0, 0, 0.6) !important;
-  }
 }
 </style>
