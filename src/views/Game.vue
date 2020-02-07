@@ -34,6 +34,7 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <p>{{ cards.join(", ") }}</p>
+              <v-btn @click="$socket.werewolves.emit('addRobot')">新增電腦</v-btn>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
