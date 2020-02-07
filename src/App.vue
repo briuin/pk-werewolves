@@ -22,17 +22,20 @@
       @cancel="showNameDialog = false"
       v-if="showNameDialog"
     />
+    <Round />
   </v-app>
 </template>
 
 <script lang="ts">
 import NameDialog from "@/components/NameDialog.vue";
+import Round from "@/components/Round.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
 
 @Component({
   components: {
-    NameDialog
+    NameDialog,
+    Round
   }
 })
 export default class App extends Vue {

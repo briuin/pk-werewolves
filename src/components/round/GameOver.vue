@@ -4,6 +4,10 @@
       <v-container class="modal-container">
         <v-row justify="center">
           <v-card class="mx-auto" max-width="300" tile>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" @click="$emit(`close`)" text>Close</v-btn>
+            </v-card-actions>
             <v-list flat>
               <v-subheader>遊戲結束: {{ title }}</v-subheader>
               <v-list-item-group color="primary">
@@ -12,9 +16,7 @@
                     <v-icon v-text="seat.seatNo"></v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title
-                      v-text="`${seat.card} ${seat.playerName}`"
-                    ></v-list-item-title>
+                    <v-list-item-title v-text="`${seat.card} ${seat.playerName}`"></v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
