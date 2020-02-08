@@ -74,7 +74,7 @@ export default class BottomNavigation extends Vue {
     this.subscribePlayers();
     this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
       this.owner = data.owner;
-      this.seated = data.seats.find(
+      this.seated = (data.seats || []).find(
         (x: any) => x.player.name === PlayerService.getName()
       );
     });

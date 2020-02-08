@@ -9,12 +9,18 @@
       @close="end()"
     />
     <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
+    <Opinion v-if="shouldShow(RoundModal.Opinion)" />
+    <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
+    <PublicVoteResult v-if="shouldShow(RoundModal.PublicVoteResult)" :diedSeatNo="data.diedSeatNo" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Wolf from "@/components/round/Wolf.vue";
+import Opinion from "@/components/round/Opinion.vue";
+import PublicVote from "@/components/round/PublicVote.vue";
+import PublicVoteResult from "@/components/round/PublicVoteResult.vue";
 import GameOver from "@/components/round/GameOver.vue";
 import DayBreaks from "@/components/round/DayBreaks.vue";
 import RoundService from "@/services/round";
@@ -24,7 +30,10 @@ import { RoundModal } from "@/enums/round-modal";
   components: {
     Wolf,
     GameOver,
-    DayBreaks
+    DayBreaks,
+    Opinion,
+    PublicVote,
+    PublicVoteResult
   }
 })
 export default class Round extends Vue {

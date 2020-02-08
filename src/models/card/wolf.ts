@@ -6,7 +6,7 @@ export default class Wolf extends Card {
   constructor() {
     super();
     this.name = "wolf";
-    this.roundModalMapping.push({
+    this.roundActionMapping.push({
       round: "roundwolf",
       action: (data: any) => {
         RoundService.showModal(RoundModal.WolfVote, data);

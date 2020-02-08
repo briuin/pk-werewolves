@@ -7,7 +7,8 @@
             <span
               class="seat-no"
               :class="{
-                wolf: isWolf(index + 1)
+                wolf: isWolf(index + 1),
+                died: !option.isAlive
               }"
               @click="vote(index + 1)"
             >{{ index + 1 }}</span>
@@ -95,6 +96,11 @@ export default class Wolf extends Vue {
       border-radius: 16px;
       border: 1px solid black;
       cursor: pointer;
+
+      &.died {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
     }
   }
 

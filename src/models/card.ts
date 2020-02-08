@@ -3,14 +3,32 @@ import { RoundModal } from "@/enums/round-modal";
 
 export default class Card {
   public name = "";
-  protected roundModalMapping: { round: string; action: Function }[] = [];
+  protected roundActionMapping: { round: string; action: Function }[] = [];
 
   constructor() {
-    this.roundModalMapping.push(
+    this.roundActionMapping.push(
       {
         round: "daybreaks",
         action: (data: any) => {
           RoundService.showModal(RoundModal.DayBreaks, data);
+        }
+      },
+      {
+        round: "opinion",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.Opinion, data);
+        }
+      },
+      {
+        round: "publicvote",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.PublicVote, data);
+        }
+      },
+      {
+        round: "publicvoteresult",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.PublicVoteResult, data);
         }
       },
       {
@@ -31,10 +49,10 @@ export default class Card {
   }
 
   protected hasActionInRound(round: String): boolean {
-    return !!this.roundModalMapping.find(x => x.round === round);
+    return !!this.roundActionMapping.find(x => x.round === round);
   }
 
   protected doActionInRound(round: String, data = {}): boolean {
-    return this.roundModalMapping.find(x => x.round === round)!.action(data);
+    return this.roundActionMapping.find(x => x.round === round)!.action(data);
   }
 }
