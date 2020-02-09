@@ -8,10 +8,11 @@
             <br />
             <v-btn
               :color="seat.isAlive ? 'primary' : 'error'"
+              :class="{ selected: selectedNo === seat.no }"
               v-for="(seat, i) in seats"
               :key="`seat${i}`"
-              @click="vote(i + 1)"
-            >{{ i + 1 }}</v-btn>
+              @click="vote(seat.no)"
+            >{{ seat.no }}</v-btn>
           </v-card>
         </v-row>
       </v-container>
@@ -26,8 +27,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class PublicVote extends Vue {
   @Prop({ default: [] }) seats!: any[];
   text = "public vote";
+  selectedNo = -1;
 
   vote(seatNo: number) {
+    this.selectedNo = seatNo;
     this.$socket.werewolves.emit("publicvote", { seatNo });
   }
 }
@@ -50,6 +53,10 @@ export default class PublicVote extends Vue {
     max-width: 280px;
     background: white;
     padding: 20px 35px;
+  }
+
+  .selected {
+    opacity: 0.6;
   }
 }
 </style>

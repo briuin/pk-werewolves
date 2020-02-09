@@ -6,7 +6,9 @@
           <v-card class="mx-auto" max-width="300" tile>
             {{ text }}
             <br />
-            {{ diedSeatNo }} 死了
+            <p v-if="diedSeatNos.length === 0">全員棄票</p>
+            <p v-else-if="diedSeatNos.length === 1">{{ diedSeatNos[0] }} 死了</p>
+            <p v-else>{{ diedSeatNos.join(", ") }} 票數一樣，繼續發表言論</p>
           </v-card>
         </v-row>
       </v-container>
@@ -19,7 +21,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class PublicVoteResult extends Vue {
-  @Prop() diedSeatNo!: number;
+  @Prop({ default: [] }) diedSeatNos!: number[];
   text = "public vote result";
 }
 </script>

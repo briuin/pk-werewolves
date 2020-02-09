@@ -11,7 +11,10 @@
     <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
     <Opinion v-if="shouldShow(RoundModal.Opinion)" />
     <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
-    <PublicVoteResult v-if="shouldShow(RoundModal.PublicVoteResult)" :diedSeatNo="data.diedSeatNo" />
+    <PublicVoteResult
+      v-if="shouldShow(RoundModal.PublicVoteResult)"
+      :diedSeatNos="data.diedSeatNos"
+    />
   </div>
 </template>
 
