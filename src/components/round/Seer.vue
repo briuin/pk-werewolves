@@ -6,11 +6,14 @@
           <v-card class="mx-auto" max-width="300" tile>
             {{ text }}
             <br />
-            <p v-if="diedSeatNos.length === 0">全員棄票</p>
-            <p v-else-if="diedSeatNos.length === 1">
-              {{ diedSeatNos[0] }} 死了
-            </p>
-            <p v-else>{{ diedSeatNos.join(", ") }} 票數一樣，繼續發表言論</p>
+            <v-btn
+              color="primary"
+              :class="{ selected: selectedNo === seat.no }"
+              v-for="(seat, i) in seats"
+              :key="`seat${i}`"
+              @click="check(seat.no)"
+              >{{ seat.no }}</v-btn
+            >
           </v-card>
         </v-row>
       </v-container>
@@ -22,9 +25,21 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class PublicVoteResult extends Vue {
-  @Prop({ default: [] }) diedSeatNos!: number[];
-  text = "public vote result";
+export default class PublicVote extends Vue {
+  @Prop({ default: [] }) seats!: any[];
+  text = "seer check";
+  selectedNo = -1;
+
+  check(seatNo: number) {
+    this.selectedNo = seatNo;
+    this.$socket.werewolves.emit("seercheck", { seatNo });
+  }
+
+  protected created() {
+    this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
+      console.log(data);
+    });
+  }
 }
 </script>
 
@@ -45,6 +60,10 @@ export default class PublicVoteResult extends Vue {
     max-width: 280px;
     background: white;
     padding: 20px 35px;
+  }
+
+  .selected {
+    opacity: 0.6;
   }
 }
 </style>

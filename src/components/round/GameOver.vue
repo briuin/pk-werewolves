@@ -6,7 +6,9 @@
           <v-card class="mx-auto" max-width="300" tile>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" @click="$emit(`close`)" text>Close</v-btn>
+              <v-btn color="blue darken-1" @click="$emit(`close`)" text
+                >Close</v-btn
+              >
             </v-card-actions>
             <v-list flat>
               <v-subheader>遊戲結束: {{ title }}</v-subheader>
@@ -16,7 +18,9 @@
                     <v-icon v-text="seat.seatNo"></v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title v-text="`${seat.card} ${seat.playerName}`"></v-list-item-title>
+                    <v-list-item-title
+                      v-text="`${seat.card} ${seat.playerName}`"
+                    ></v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -34,14 +38,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class GameOver extends Vue {
   @Prop({ default: [] }) seats!: any[];
-  @Prop() isWinner!: boolean;
   @Prop() gameWin!: boolean;
 
   get title() {
-    return (
-      (this.isWinner ? "恭喜！" : "很遺憾！") +
-      (this.gameWin ? "好人贏了" : "狼人贏了")
-    );
+    return this.gameWin ? "好人贏了" : "狼人贏了";
   }
 }
 </script>

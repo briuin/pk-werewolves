@@ -11,8 +11,16 @@
     <template v-else>
       <v-btn color="success" v-if="!seated" dark @click="sit()">坐下</v-btn>
       <v-btn color="warning" v-if="seated" dark @click="stand()">站立</v-btn>
-      <v-btn color="success" v-if="seated && !isReady" dark @click="ready()">準備</v-btn>
-      <v-btn color="primary" :disabled="!isAllSeatedPlayersReady" v-if="isOwner" @click="start()">開始</v-btn>
+      <v-btn color="success" v-if="seated && !isReady" dark @click="ready()"
+        >準備</v-btn
+      >
+      <v-btn
+        color="primary"
+        :disabled="!isAllSeatedPlayersReady"
+        v-if="isOwner"
+        @click="start()"
+        >開始</v-btn
+      >
     </template>
   </v-bottom-navigation>
 </template>
@@ -20,10 +28,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
+import GameService from "@/services/game";
 
-@Component({})
+@Component({
+  subscriptions() {
+    return { isGameStarted: GameService.isStarted$ };
+  }
+})
 export default class BottomNavigation extends Vue {
-  @Prop() isGameStarted!: boolean;
   public title = "";
   public time = 0;
   public seated = false;

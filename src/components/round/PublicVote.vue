@@ -12,7 +12,8 @@
               v-for="(seat, i) in seats"
               :key="`seat${i}`"
               @click="vote(seat.no)"
-            >{{ seat.no }}</v-btn>
+              >{{ seat.no }}</v-btn
+            >
           </v-card>
         </v-row>
       </v-container>

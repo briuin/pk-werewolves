@@ -3,7 +3,11 @@
     <v-form>
       <v-container class="modal-container">
         <v-row justify="center">
-          <div class="vote-option" v-for="(option, index) in voteOptions" :key="'vote' + index">
+          <div
+            class="vote-option"
+            v-for="(option, index) in voteOptions"
+            :key="'vote' + index"
+          >
             <span
               class="seat-no"
               :class="{
@@ -11,7 +15,8 @@
                 died: !option.isAlive
               }"
               @click="vote(index + 1)"
-            >{{ index + 1 }}</span>
+              >{{ index + 1 }}</span
+            >
             <span>{{ getSeatVoteTexts(index + 1) }}</span>
           </div>
         </v-row>

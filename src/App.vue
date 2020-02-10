@@ -1,15 +1,23 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar v-if="isGameStarted && !isPlayerAlive" app color="red" dark>
+      <div class="d-flex align-center margin-auto">
+        <span>陣亡</span>
+      </div>
+    </v-app-bar>
+    <v-app-bar v-else app color="primary" dark>
       <div class="d-flex align-center">
         <span @click="goToHome()">狼人殺</span>
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn @click="showCancelableDialog()" text>
+      <v-btn v-if="!isGameStarted" @click="showCancelableDialog()" text>
         <span class="mr-2">{{ playerName }}</span>
         <v-icon>mdi-account-edit</v-icon>
+      </v-btn>
+      <v-btn v-else text>
+        <span class="mr-2">{{ playerName }}</span>
       </v-btn>
     </v-app-bar>
 
@@ -31,11 +39,18 @@ import NameDialog from "@/components/NameDialog.vue";
 import Round from "@/components/Round.vue";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
+import GameService from "@/services/game";
 
 @Component({
   components: {
     NameDialog,
     Round
+  },
+  subscriptions() {
+    return {
+      isGameStarted: GameService.isStarted$,
+      isPlayerAlive: GameService.isAlive$
+    };
   }
 })
 export default class App extends Vue {
@@ -72,3 +87,9 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.margin-auto {
+  margin: 0 auto;
+}
+</style>

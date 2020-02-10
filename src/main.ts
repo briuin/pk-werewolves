@@ -3,7 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import VueSocketIO from "vue-socket.io";
 import vuetify from "./plugins/vuetify";
+import VueRx from "vue-rx";
 
+Vue.use(VueRx);
 Vue.config.productionTip = false;
 
 Vue.use(
