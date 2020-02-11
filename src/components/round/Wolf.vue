@@ -7,17 +7,17 @@
             class="vote-option"
             v-for="(option, index) in voteOptions"
             :key="'vote' + index"
+            @click="vote(option.no)"
           >
-            <span
-              class="seat-no"
-              :class="{
-                wolf: isWolf(index + 1),
-                died: !option.isAlive
-              }"
-              @click="vote(index + 1)"
-              >{{ index + 1 }}</span
-            >
-            <span>{{ getSeatVoteTexts(index + 1) }}</span>
+            <v-chip v-if="isWolf(option.no)" class="ma-2" color="pink" text-color="white">
+              <v-avatar left class>{{ option.no }}</v-avatar>
+              {{ option.player.name }}
+            </v-chip>
+            <v-chip v-else class="ma-2" color="primary" text-color="primary" outlined>
+              <v-avatar left>{{ option.no }}</v-avatar>
+              {{ option.player.name }}
+            </v-chip>
+            <span>{{ getSeatVoteTexts(option.no) }}</span>
           </div>
         </v-row>
       </v-container>
@@ -31,7 +31,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class Wolf extends Vue {
   @Prop() seats!: any[];
-  @Prop({ default: [] }) wolves!: any[];
+  @Prop({ default: () => [] }) wolves!: any[];
   wolfVotes: number[] = [];
 
   get voteOptions() {
@@ -51,7 +51,7 @@ export default class Wolf extends Vue {
   }
 
   isWolf(seatNo: number) {
-    return this.wolves.find(x => x.seatNo === seatNo);
+    return this.wolves.find(x => x.no === seatNo);
   }
 
   vote(seatNo: number) {
@@ -86,32 +86,15 @@ export default class Wolf extends Vue {
   }
 
   .vote-option {
-    height: 60px;
-    margin: 10px;
     display: flex;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    .seat-no {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 16px;
-      border: 1px solid black;
-      cursor: pointer;
-
-      &.died {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-    }
   }
 
-  .wolf {
-    background: red;
-    color: white;
+  .vote-option,
+  .vote-option .v-chip {
+    cursor: pointer;
   }
 }
 </style>

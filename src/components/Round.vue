@@ -1,10 +1,6 @@
 <template>
   <div>
-    <Wolf
-      v-if="shouldShow(RoundModal.WolfVote)"
-      :seats="data.seats"
-      :wolves="data.wolves"
-    />
+    <Wolf v-if="shouldShow(RoundModal.WolfVote)" :seats="data.seats" :wolves="data.wolves" />
     <Seer v-if="shouldShow(RoundModal.SeerCheck)" :seats="data.seats" />
     <GameOver
       :seats="data.seats"
@@ -12,10 +8,7 @@
       v-if="shouldShow(RoundModal.GameOver)"
       @close="end()"
     />
-    <DayBreaks
-      v-if="shouldShow(RoundModal.DayBreaks)"
-      :diedPlayers="data.seatsNo"
-    />
+    <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
     <Opinion v-if="shouldShow(RoundModal.Opinion)" />
     <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
     <PublicVoteResult

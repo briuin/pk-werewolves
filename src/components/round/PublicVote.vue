@@ -6,14 +6,18 @@
           <v-card class="mx-auto" max-width="300" tile>
             {{ text }}
             <br />
-            <v-btn
-              :color="seat.isAlive ? 'primary' : 'error'"
+            <div
+              class="option"
               :class="{ selected: selectedNo === seat.no }"
               v-for="(seat, i) in seats"
               :key="`seat${i}`"
               @click="vote(seat.no)"
-              >{{ seat.no }}</v-btn
             >
+              <v-chip class="ma-2" color="primary" text-color="primary" outlined>
+                <v-avatar left>{{ seat.no }}</v-avatar>
+                {{ seat.player.name }}
+              </v-chip>
+            </div>
           </v-card>
         </v-row>
       </v-container>
@@ -58,6 +62,11 @@ export default class PublicVote extends Vue {
 
   .selected {
     opacity: 0.6;
+  }
+
+  .option,
+  .option .v-chip {
+    cursor: pointer;
   }
 }
 </style>

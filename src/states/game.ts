@@ -3,7 +3,8 @@ import Card from "@/models/card";
 const state = {
   isStarted: false,
   isAlive: true,
-  card: new Card()
+  card: new Card(),
+  seatNo: 0
 };
 
 const service = {

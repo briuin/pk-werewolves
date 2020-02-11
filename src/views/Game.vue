@@ -7,25 +7,20 @@
             <v-expansion-panel-header>
               人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
               {{ players.length - seatedPlayers.length }}
-              <template v-slot:actions>
+              <template
+                v-slot:actions
+              >
                 <v-icon color="primary">$expand</v-icon>
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-list>
-                <v-list-group
-                  :value="true"
-                  no-action
-                  prepend-icon="account_circle"
-                >
+                <v-list-group :value="true" no-action prepend-icon="account_circle">
                   <template v-slot:activator>
                     <v-list-item-title>就坐玩家</v-list-item-title>
                   </template>
 
-                  <v-list-item
-                    v-for="(player, i) in seatedPlayers"
-                    :key="'ready' + i"
-                  >
+                  <v-list-item v-for="(player, i) in seatedPlayers" :key="'ready' + i">
                     <v-list-item-title
                       v-text="
                         player.name +
@@ -33,29 +28,17 @@
                       "
                     ></v-list-item-title>
                     <v-list-item-action>
-                      <v-icon
-                        v-if="player.isBot"
-                        color="red"
-                        @click="removeBot(player.name)"
-                        >delete</v-icon
-                      >
+                      <v-icon v-if="player.isBot" color="red" @click="removeBot(player.name)">delete</v-icon>
                       <v-icon v-else>account_circle</v-icon>
                     </v-list-item-action>
                   </v-list-item>
                 </v-list-group>
-                <v-list-group
-                  :value="false"
-                  no-action
-                  prepend-icon="account_circle"
-                >
+                <v-list-group :value="false" no-action prepend-icon="account_circle">
                   <template v-slot:activator>
                     <v-list-item-title>旁觀玩家</v-list-item-title>
                   </template>
 
-                  <v-list-item
-                    v-for="(player, i) in observers"
-                    :key="'ready' + i"
-                  >
+                  <v-list-item v-for="(player, i) in observers" :key="'ready' + i">
                     <v-list-item-title v-text="player.name"></v-list-item-title>
                     <v-list-item-action>
                       <v-icon>account_circle</v-icon>
@@ -81,16 +64,11 @@
             <v-expansion-panel-content>
               <p>{{ cards.join(", ") }}</p>
               <v-btn @click="$socket.werewolves.emit('addBot')">新增電腦</v-btn>
-              <p v-for="(seat, i) in seatedPlayers" :key="`seat${i}`">
-                {{ i + 1 }} : {{ seat.name }}
-              </p>
+              <p v-for="(seat, i) in seatedPlayers" :key="`seat${i}`">{{ i + 1 }} : {{ seat.name }}</p>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
-    </v-layout>
-    <v-layout v-if="isStarted">
-      <div>身份：{{ card.name }}</div>
     </v-layout>
     <v-card class="mx-auto">
       <v-toolbar v-if="false" color="cyan" dark>
@@ -107,17 +85,9 @@
 
       <v-list three-line>
         <template v-for="(item, index) in messages.filter(x => !x.divider)">
-          <v-subheader
-            v-if="item.header"
-            :key="item.header + index"
-            v-text="item.header"
-          ></v-subheader>
+          <v-subheader v-if="item.header" :key="item.header + index" v-text="item.header"></v-subheader>
 
-          <v-divider
-            v-else-if="item.divider"
-            :key="index"
-            :inset="item.inset"
-          ></v-divider>
+          <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
 
           <v-list-item v-else :key="item.name + index">
             <v-list-item-avatar v-if="false">
@@ -125,20 +95,14 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-title
-                v-if="false"
-                v-html="item.name"
-              ></v-list-item-title>
+              <v-list-item-title v-if="false" v-html="item.name"></v-list-item-title>
               <v-list-item-subtitle
                 v-if="item.seatNo"
                 v-html="
                   `<span class='text--primary'>${item.seatNo}號</span> &mdash; ${item.message}`
                 "
               ></v-list-item-subtitle>
-              <v-list-item-subtitle
-                v-else
-                v-html="`<b>${item.name}:</b> ${item.message}`"
-              ></v-list-item-subtitle>
+              <v-list-item-subtitle v-else v-html="`<b>${item.name}:</b> ${item.message}`"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -183,7 +147,6 @@ export default class Game extends Vue {
   seatedPlayers: any[] = [];
   isReadyPlayers: any[] = [];
   cards: string[] = [];
-  seatNo = 0;
   seated = false;
 
   get observers() {
@@ -241,8 +204,7 @@ export default class Game extends Vue {
 
   private subscribeGameStart() {
     this.sockets.werewolves.subscribe("start", (data: any) => {
-      GameService.start(data.card);
-      this.seatNo = data.seatNo;
+      GameService.start(data.seatNo, data.card);
     });
   }
 

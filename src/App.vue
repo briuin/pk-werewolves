@@ -1,17 +1,26 @@
 <template>
   <v-app>
     <v-app-bar v-if="isGameStarted && !isPlayerAlive" app color="red" dark>
-      <div class="d-flex align-center margin-auto">
-        <span>陣亡</span>
+      <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
+        <span v-if="!isShowCard">
+          <template v-if="seatNo > 0">{{ seatNo }}號</template> 陣亡
+        </span>
+        <span v-else>
+          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          {{ card.name }}
+        </span>
       </div>
     </v-app-bar>
     <v-app-bar v-else-if="isGameStarted" app color="primary" dark>
-      <div
-        class="d-flex align-center margin-auto"
-        @click="isShowCard = !isShowCard"
-      >
-        <span v-if="!isShowCard">{{ playerName }}</span>
-        <span v-else>{{ card.name }}</span>
+      <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
+        <span v-if="!isShowCard">
+          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          {{ playerName }}
+        </span>
+        <span v-else>
+          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          {{ card.name }}
+        </span>
       </div>
     </v-app-bar>
     <v-app-bar v-else app color="primary" dark>
@@ -59,7 +68,8 @@ import GameService from "@/services/game";
     return {
       isGameStarted: GameService.isStarted$,
       isPlayerAlive: GameService.isAlive$,
-      card: GameService.card$
+      card: GameService.card$,
+      seatNo: GameService.seatNo$
     };
   }
 })
