@@ -5,6 +5,15 @@
         <span>陣亡</span>
       </div>
     </v-app-bar>
+    <v-app-bar v-else-if="isGameStarted" app color="primary" dark>
+      <div
+        class="d-flex align-center margin-auto"
+        @click="isShowCard = !isShowCard"
+      >
+        <span v-if="!isShowCard">{{ playerName }}</span>
+        <span v-else>{{ card.name }}</span>
+      </div>
+    </v-app-bar>
     <v-app-bar v-else app color="primary" dark>
       <div class="d-flex align-center">
         <span @click="goToHome()">狼人殺</span>
@@ -49,7 +58,8 @@ import GameService from "@/services/game";
   subscriptions() {
     return {
       isGameStarted: GameService.isStarted$,
-      isPlayerAlive: GameService.isAlive$
+      isPlayerAlive: GameService.isAlive$,
+      card: GameService.card$
     };
   }
 })
@@ -59,6 +69,7 @@ export default class App extends Vue {
   nameDialogOptions = {
     cancelable: false
   };
+  isShowCard = false;
 
   setName(name: string) {
     PlayerService.setName(name);
