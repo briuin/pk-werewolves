@@ -108,6 +108,8 @@
         </template>
       </v-list>
     </v-card>
+    <Chat class="chat" />
+    <FloatingMenu class="floating-menu" />
     <BottomNavigation />
   </v-container>
 </template>
@@ -122,12 +124,16 @@ import CardFactory from "@/models/card-factory";
 import RoundWolf from "@/components/round/Wolf.vue";
 import GameOver from "@/components/round/GameOver.vue";
 import BottomNavigation from "@/components/BottomNavigation.vue";
+import Chat from "@/components/Chat.vue";
+import FloatingMenu from "@/components/FloatingMenu.vue";
 
 @Component({
   components: {
     RoundWolf,
     GameOver,
-    BottomNavigation
+    BottomNavigation,
+    Chat,
+    FloatingMenu
   },
   subscriptions() {
     return {
@@ -245,5 +251,22 @@ export default class Game extends Vue {
 .v-list-item {
   min-height: 0px !important;
   padding: 2px 16px !important;
+}
+
+.chat {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 350px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.floating-menu {
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
 }
 </style>

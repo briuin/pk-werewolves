@@ -3,10 +3,18 @@
     <v-app-bar v-if="isGameStarted && !isPlayerAlive" app color="red" dark>
       <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
         <span v-if="!isShowCard">
-          <template v-if="seatNo > 0">{{ seatNo }}號</template> 陣亡
+          <template v-if="seatNo > 0">
+            {{ seatNo }}號
+            <v-icon v-if="isShowCard">mdi-eye</v-icon>
+            <v-icon v-else>mdi-eye-off</v-icon>
+          </template> 陣亡
         </span>
         <span v-else>
-          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          <template v-if="seatNo > 0">
+            {{ seatNo }}號
+            <v-icon v-if="isShowCard">mdi-eye</v-icon>
+            <v-icon v-else>mdi-eye-off</v-icon>
+          </template>
           {{ card.name }}
         </span>
       </div>
@@ -14,11 +22,19 @@
     <v-app-bar v-else-if="isGameStarted" app color="primary" dark>
       <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
         <span v-if="!isShowCard">
-          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          <template v-if="seatNo > 0">
+            {{ seatNo }}號
+            <v-icon v-if="isShowCard">mdi-eye</v-icon>
+            <v-icon v-else>mdi-eye-off</v-icon>
+          </template>
           {{ playerName }}
         </span>
         <span v-else>
-          <template v-if="seatNo > 0">{{ seatNo }}號</template>
+          <template v-if="seatNo > 0">
+            {{ seatNo }}號
+            <v-icon v-if="isShowCard">mdi-eye</v-icon>
+            <v-icon v-else>mdi-eye-off</v-icon>
+          </template>
           {{ card.name }}
         </span>
       </div>
