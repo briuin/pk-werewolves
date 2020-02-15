@@ -4,7 +4,11 @@ const state = {
   isStarted: false,
   isAlive: true,
   card: new Card(),
-  seatNo: 0
+  seatNo: 0,
+  isOwner: false,
+  seats: [],
+  players: [],
+  assignedCards: []
 };
 
 const service = {

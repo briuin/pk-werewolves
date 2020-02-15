@@ -16,7 +16,7 @@
               </v-btn>
             </v-toolbar>
 
-            <v-list three-line>
+            <v-list ref="chats">
               <template v-for="(item, index) in messages.filter(x => !x.divider)">
                 <v-subheader v-if="item.header" :key="item.header + index" v-text="item.header"></v-subheader>
 
@@ -32,7 +32,7 @@
                     <v-list-item-subtitle
                       v-if="item.seatNo"
                       v-html="
-                  `<span class='text--primary'>${item.seatNo}號</span> &mdash; ${item.message}`
+                  `<span class='text--primary'>${item.seatNo}號 ${item.name}</span> &mdash; ${item.message}`
                 "
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle v-else v-html="`<b>${item.name}:</b> ${item.message}`"></v-list-item-subtitle>
@@ -54,6 +54,7 @@
             clearable
             label="Message"
             type="text"
+            @keydown.enter.prevent.stop="sendMessage"
             @click:append-outer="sendMessage"
             @click:prepend="sendEmoji"
             @click:clear="clearMessage"
@@ -70,11 +71,19 @@ import PlayerService from "@/services/player";
 
 @Component
 export default class Chat extends Vue {
-  public messages = [{ header: `房號 ${1}` }];
+  public messages: any[] = [];
   public message = "";
 
+  get chatList() {
+    return this.$refs.chats && ((this.$refs.chats as any).$el as HTMLElement);
+  }
+
   public sendMessage() {
-    //
+    if (!this.message) {
+      return;
+    }
+    this.$socket.werewolves.emit("sendmessage", { message: this.message });
+    this.clearMessage();
   }
 
   public sendEmoji() {
@@ -82,7 +91,31 @@ export default class Chat extends Vue {
   }
 
   public clearMessage() {
-    //
+    this.message = "";
+  }
+
+  protected created() {
+    this.messages.push({ header: `房號 ${this.$route.params.id}` });
+    this.sockets.werewolves.subscribe("message", (data: any) => {
+      this.messages.push(
+        {
+          name: data.name,
+          seatNo: data.seatNo,
+          message: data.message
+        },
+        { divider: true, inset: true }
+      );
+
+      Vue.nextTick(() => {
+        if (this.chatList) {
+          this.chatList.scrollTop = this.chatList.scrollHeight;
+        }
+      });
+    });
+
+    this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
+      this.messages = [...data.messages, ...this.messages];
+    });
   }
 }
 </script>
@@ -92,6 +125,12 @@ export default class Chat extends Vue {
   height: 270px;
 }
 
+.v-list-item__content,
+.v-list-item {
+  min-height: 0px !important;
+  padding: 2px 16px !important;
+}
+
 .chat {
   .col {
     padding: 0 !important;
@@ -99,6 +138,34 @@ export default class Chat extends Vue {
 
   .v-card {
     box-shadow: none;
+    padding-top: 45px;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .v-list {
+    overflow: scroll;
+    height: 100%;
+    background-color: initial;
+  }
+
+  .v-subheader {
+    position: absolute;
+    top: 0;
+  }
+
+  .container {
+    padding-bottom: 0;
+  }
+}
+</style>
+
+<style lang="scss">
+.chat {
+  .v-list-item__subtitle {
+    white-space: inherit;
+  }
+  .v-input__control .v-text-field__details {
+    display: none;
   }
 }
 </style>

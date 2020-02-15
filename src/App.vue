@@ -130,3 +130,19 @@ export default class App extends Vue {
   margin: 0 auto;
 }
 </style>
+
+<style lang="scss">
+body {
+  background: #00d4ff;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 6, 64, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+
+  .theme--light.v-application {
+    background: inherit;
+  }
+}
+</style>

@@ -1,6 +1,10 @@
 <template>
   <v-container>
-    <v-layout>
+    <div class="player-detail-mobile">
+      人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
+      {{ players.length - seatedPlayers.length }}
+    </div>
+    <v-layout class="player-detail-desktop">
       <div class="full-width">
         <v-expansion-panels>
           <v-expansion-panel>
@@ -14,44 +18,13 @@
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-list>
-                <v-list-group :value="true" no-action prepend-icon="account_circle">
-                  <template v-slot:activator>
-                    <v-list-item-title>就坐玩家</v-list-item-title>
-                  </template>
-
-                  <v-list-item v-for="(player, i) in seatedPlayers" :key="'ready' + i">
-                    <v-list-item-title
-                      v-text="
-                        player.name +
-                          (isReady(player.name) ? ' - 準備就緒' : '')
-                      "
-                    ></v-list-item-title>
-                    <v-list-item-action>
-                      <v-icon v-if="player.isBot" color="red" @click="removeBot(player.name)">delete</v-icon>
-                      <v-icon v-else>account_circle</v-icon>
-                    </v-list-item-action>
-                  </v-list-item>
-                </v-list-group>
-                <v-list-group :value="false" no-action prepend-icon="account_circle">
-                  <template v-slot:activator>
-                    <v-list-item-title>旁觀玩家</v-list-item-title>
-                  </template>
-
-                  <v-list-item v-for="(player, i) in observers" :key="'ready' + i">
-                    <v-list-item-title v-text="player.name"></v-list-item-title>
-                    <v-list-item-action>
-                      <v-icon>account_circle</v-icon>
-                    </v-list-item-action>
-                  </v-list-item>
-                </v-list-group>
-              </v-list>
+              <PlayerDetail />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
     </v-layout>
-    <v-layout>
+    <v-layout class="card-detail-desktop">
       <div class="full-width">
         <v-expansion-panels>
           <v-expansion-panel>
@@ -62,55 +35,17 @@
               </template>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <p>{{ cards.join(", ") }}</p>
-              <v-btn @click="$socket.werewolves.emit('addBot')">新增電腦</v-btn>
-              <p v-for="(seat, i) in seatedPlayers" :key="`seat${i}`">{{ i + 1 }} : {{ seat.name }}</p>
+              <CardDetails />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
     </v-layout>
-    <v-card class="mx-auto">
-      <v-toolbar v-if="false" color="cyan" dark>
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-        <v-toolbar-title>Inbox</v-toolbar-title>
-
-        <v-spacer></v-spacer>
-
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-      </v-toolbar>
-
-      <v-list three-line>
-        <template v-for="(item, index) in messages.filter(x => !x.divider)">
-          <v-subheader v-if="item.header" :key="item.header + index" v-text="item.header"></v-subheader>
-
-          <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
-
-          <v-list-item v-else :key="item.name + index">
-            <v-list-item-avatar v-if="false">
-              <v-img src="@/assets/question-people.jpg"></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title v-if="false" v-html="item.name"></v-list-item-title>
-              <v-list-item-subtitle
-                v-if="item.seatNo"
-                v-html="
-                  `<span class='text--primary'>${item.seatNo}號</span> &mdash; ${item.message}`
-                "
-              ></v-list-item-subtitle>
-              <v-list-item-subtitle v-else v-html="`<b>${item.name}:</b> ${item.message}`"></v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
     <Chat class="chat" />
     <FloatingMenu class="floating-menu" />
-    <BottomNavigation />
+    <BottomNavigation class="bottom-navigation" />
+    <JoinActionGroup class="join-action-group" />
   </v-container>
 </template>
 
@@ -126,6 +61,9 @@ import GameOver from "@/components/round/GameOver.vue";
 import BottomNavigation from "@/components/BottomNavigation.vue";
 import Chat from "@/components/Chat.vue";
 import FloatingMenu from "@/components/FloatingMenu.vue";
+import JoinActionGroup from "@/components/JoinActionGroup.vue";
+import PlayerDetail from "@/components/PlayerDetail.vue";
+import CardDetails from "@/components/CardDetails.vue";
 
 @Component({
   components: {
@@ -133,27 +71,23 @@ import FloatingMenu from "@/components/FloatingMenu.vue";
     GameOver,
     BottomNavigation,
     Chat,
-    FloatingMenu
+    FloatingMenu,
+    JoinActionGroup,
+    PlayerDetail,
+    CardDetails
   },
   subscriptions() {
     return {
       card: GameService.card$,
-      isStarted: GameService.isStarted$
+      isStarted: GameService.isStarted$,
+      isOwner: GameService.isOwner$
     };
   }
 })
 export default class Game extends Vue {
-  id = "";
-  name = "";
   card: Card = new Card();
-
-  messages: any[] = [];
-  owner = "";
   players: any[] = [];
   seatedPlayers: any[] = [];
-  isReadyPlayers: any[] = [];
-  cards: string[] = [];
-  seated = false;
 
   get observers() {
     return this.players.filter(
@@ -161,20 +95,12 @@ export default class Game extends Vue {
     );
   }
 
-  get isOwner() {
-    return this.owner === PlayerService.getName();
+  get isReadyPlayers() {
+    return this.seatedPlayers.filter(x => x.isReady);
   }
 
   isReady(name: string) {
     return !!this.isReadyPlayers.find(x => x.name === name);
-  }
-
-  removeBot(name: string) {
-    this.$socket.werewolves.emit("removeBot", { botName: name });
-  }
-
-  reset() {
-    this.cards = [];
   }
 
   protected created() {
@@ -183,28 +109,21 @@ export default class Game extends Vue {
         this.$router.push("/");
         return;
       }
-      this.owner = data.owner;
+      GameService.setOwner(data.owner);
+      GameService.setCards(data.cards);
     });
-    this.sockets.werewolves.subscribe("message", (data: any) => {
-      this.messages.push(
-        {
-          name: data.name,
-          seatNo: data.seatNo,
-          message: data.message
-        },
-        { divider: true, inset: true }
-      );
-    });
-    this.id = this.$route.params.id;
-    this.messages = [{ header: `房號 ${this.id}` }];
-    this.$socket.werewolves.emit("gamedetails", { id: this.id });
+
+    const id = this.$route.params.id;
+    this.$socket.werewolves.emit("gamedetails", { id });
     this.subscribeGameStart();
     this.subscribePlayers();
     this.subscribeRound();
     this.subscribeNewGame();
-    this.subscribeCards();
     this.sockets.werewolves.subscribe("dead", (data: any) => {
       GameService.beKilled();
+    });
+    this.sockets.werewolves.subscribe("cards", (data: any) => {
+      GameService.setCards(data.cards);
     });
   }
 
@@ -216,9 +135,12 @@ export default class Game extends Vue {
 
   private subscribePlayers() {
     this.sockets.werewolves.subscribe("players", (data: any) => {
+      GameService.updatePlayers({
+        seatedPlayers: data.seatedPlayers,
+        players: data.players
+      });
       this.players = data.players;
-      this.seatedPlayers = data.seated;
-      this.isReadyPlayers = data.ready;
+      this.seatedPlayers = data.seatedPlayers;
     });
   }
 
@@ -233,24 +155,12 @@ export default class Game extends Vue {
       GameService.reset();
     });
   }
-
-  private subscribeCards() {
-    this.sockets.werewolves.subscribe("cards", (data: any) => {
-      this.cards = data.cards;
-    });
-  }
 }
 </script>
 
 <style lang="scss" scoped>
 .full-width {
   width: 100%;
-}
-
-.v-list-item__content,
-.v-list-item {
-  min-height: 0px !important;
-  padding: 2px 16px !important;
 }
 
 .chat {
@@ -260,6 +170,7 @@ export default class Game extends Vue {
   width: 350px;
   @media (max-width: 768px) {
     width: 100%;
+    margin-bottom: 50px;
   }
 }
 
@@ -267,6 +178,41 @@ export default class Game extends Vue {
   display: none;
   @media (max-width: 768px) {
     display: block;
+    position: fixed;
+    right: 10px;
+    top: 80%;
+    z-index: 100;
+  }
+}
+
+.bottom-navigation {
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.join-action-group {
+  position: fixed;
+  right: 10px;
+  bottom: 5px;
+}
+
+.card-detail-desktop,
+.player-detail-desktop {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.player-detail-mobile {
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    top: 60px;
+    right: 5px;
+    color: white;
   }
 }
 </style>
