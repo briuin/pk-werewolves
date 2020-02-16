@@ -2,6 +2,7 @@ import Wolf from "./card/wolf";
 import Card from "./card";
 import Folk from "./card/folk";
 import Seer from "./card/seer";
+import Witch from "./card/witch";
 
 export default class CardFactory {
   static create(card: string) {
@@ -10,6 +11,8 @@ export default class CardFactory {
         return new Wolf();
       case "seer":
         return new Seer();
+      case "witch":
+        return new Witch();
       case "folk":
         return new Folk();
       default:

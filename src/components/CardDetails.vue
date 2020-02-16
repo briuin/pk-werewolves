@@ -67,7 +67,8 @@ export default class CardDetails extends Vue {
   cardsCount = [
     { name: "wolf", count: 0, max: 10 },
     { name: "folk", count: 0, max: 10 },
-    { name: "seer", count: 0, max: 1 }
+    { name: "seer", count: 0, max: 1 },
+    { name: "witch", count: 0, max: 1 }
   ];
 
   get cardLength() {

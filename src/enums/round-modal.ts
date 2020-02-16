@@ -3,6 +3,7 @@ export enum RoundModal {
   PeerCard,
   WolfVote,
   SeerCheck,
+  WitchWork,
   DayBreaks,
   Opinion,
   PublicVote,
