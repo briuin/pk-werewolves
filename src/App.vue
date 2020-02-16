@@ -19,7 +19,7 @@
         </span>
       </div>
     </v-app-bar>
-    <v-app-bar v-else-if="isGameStarted" app color="primary" dark>
+    <v-app-bar v-else-if="isGameStarted" app color="#020024" dark>
       <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
         <span v-if="!isShowCard">
           <template v-if="seatNo > 0">
@@ -39,7 +39,7 @@
         </span>
       </div>
     </v-app-bar>
-    <v-app-bar v-else app color="primary" dark>
+    <v-app-bar v-else app color="#020024" dark>
       <div class="d-flex align-center">
         <span @click="goToHome()">狼人殺</span>
       </div>
@@ -143,6 +143,10 @@ body {
 
   .theme--light.v-application {
     background: inherit;
+  }
+
+  .v-app-bar {
+    z-index: 5000 !important;
   }
 }
 </style>

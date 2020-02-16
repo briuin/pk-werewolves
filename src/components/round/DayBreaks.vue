@@ -3,11 +3,12 @@
     <v-form>
       <v-container class="modal-container">
         <v-row justify="center">
-          <v-card class="mx-auto" max-width="300" tile>
-            {{ text }}
-            <br />
-            {{ diedPlayers.join(",") }}
-          </v-card>
+          <v-col cols="12">
+            <h1>天亮了</h1>
+          </v-col>
+          <v-col cols="12">
+            <h4>{{ diedPlayers.map(x => `${x}號`).join(", ") }} 死了</h4>
+          </v-col>
         </v-row>
       </v-container>
     </v-form>
@@ -20,7 +21,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class DayBreaks extends Vue {
   @Prop({ default: [] }) diedPlayers!: any[];
-  text = "daybreak";
 }
 </script>
 
@@ -41,6 +41,7 @@ export default class DayBreaks extends Vue {
     max-width: 280px;
     background: white;
     padding: 20px 35px;
+    text-align: center;
   }
 }
 </style>

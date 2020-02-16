@@ -20,10 +20,7 @@
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
       <v-btn fab dark small color="indigo" @click="selectedIndex = 2">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn fab dark small color="red">
-        <v-icon>mdi-delete</v-icon>
+        <v-icon>mdi-cards</v-icon>
       </v-btn>
     </v-speed-dial>
     <PlayersDetails v-if="selectedIndex === 1" @close="selectedIndex = 0" />

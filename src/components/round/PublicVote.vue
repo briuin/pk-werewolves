@@ -3,22 +3,22 @@
     <v-form>
       <v-container class="modal-container">
         <v-row justify="center">
-          <v-card class="mx-auto" max-width="300" tile>
-            {{ text }}
-            <br />
-            <div
-              class="option"
-              :class="{ selected: selectedNo === seat.no }"
-              v-for="(seat, i) in seats"
-              :key="`seat${i}`"
-              @click="vote(seat.no)"
-            >
-              <v-chip class="ma-2" color="primary" text-color="primary" outlined>
-                <v-avatar left>{{ seat.no }}</v-avatar>
-                {{ seat.player.name }}
-              </v-chip>
-            </div>
-          </v-card>
+          <v-col cols="12">
+            <h1>請投票</h1>
+          </v-col>
+          <br />
+          <div
+            class="option"
+            :class="{ selected: selectedNo === seat.no }"
+            v-for="(seat, i) in seats"
+            :key="`seat${i}`"
+            @click="vote(seat.no)"
+          >
+            <v-chip class="ma-2" color="primary" text-color="primary" outlined>
+              <v-avatar left>{{ seat.no }}</v-avatar>
+              {{ seat.player.name }}
+            </v-chip>
+          </div>
         </v-row>
       </v-container>
     </v-form>
@@ -55,9 +55,13 @@ export default class PublicVote extends Vue {
   align-items: center;
 
   .modal-container {
-    max-width: 280px;
+    min-width: 280px;
+    width: 70%;
+    max-height: 350px;
+    overflow: scroll;
     background: white;
     padding: 20px 35px;
+    text-align: center;
   }
 
   .selected {

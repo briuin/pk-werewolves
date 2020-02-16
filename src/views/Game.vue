@@ -4,27 +4,41 @@
       人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
       {{ players.length - seatedPlayers.length }}
     </div>
-    <v-layout class="player-detail-desktop">
-      <div class="full-width">
-        <v-expansion-panels>
-          <v-expansion-panel>
-            <v-expansion-panel-header>
-              人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
-              {{ players.length - seatedPlayers.length }}
-              <template
-                v-slot:actions
-              >
-                <v-icon color="primary">$expand</v-icon>
-              </template>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <PlayerDetail />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+    <div class="player-detail-desktop">
+      <div class="count-title">
+        人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
+        {{ players.length - seatedPlayers.length }}
       </div>
-    </v-layout>
-    <v-layout class="card-detail-desktop">
+      <div class="player-group">
+        <h5>就坐玩家 ({{ seats.length }})</h5>
+        <div class="player">
+          <span v-for="seat in seats" :key="`seat${seat.name}`">
+            <v-chip
+              class="ma-1"
+              :close="seat.isBot && !isStarted"
+              :color="isStarted && !seat.isAlive ? 'red' : '#00BFFF'"
+              outlined
+              @click:close="$socket.werewolves.emit('removeBot', { botName: seat.name })"
+            >
+              <v-avatar left v-if="seat.no">{{ seat.no }}</v-avatar>
+              {{ seat.name }}
+            </v-chip>
+          </span>
+        </div>
+      </div>
+      <div class="player-group">
+        <h5>旁觀玩家 ({{ observers.length }})</h5>
+        <div class="player">
+          <span v-for="player in observers" :key="`observer${player.name}`">
+            <v-chip class="ma-1" color="#5F9EA0" outlined>{{ player.name }}</v-chip>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-detail-desktop">
+      <CardDetails dark />
+    </div>
+    <v-layout v-if="false" class="card-detail-desktop">
       <div class="full-width">
         <v-expansion-panels>
           <v-expansion-panel>
@@ -80,7 +94,9 @@ import CardDetails from "@/components/CardDetails.vue";
     return {
       card: GameService.card$,
       isStarted: GameService.isStarted$,
-      isOwner: GameService.isOwner$
+      isOwner: GameService.isOwner$,
+      seats: GameService.seats$,
+      players: GameService.players$
     };
   }
 })
@@ -128,8 +144,12 @@ export default class Game extends Vue {
   }
 
   private subscribeGameStart() {
+    this.sockets.werewolves.subscribe("peercard", (data: any) => {
+      GameService.peerCard(data.seatNo, data.card);
+    });
+
     this.sockets.werewolves.subscribe("start", (data: any) => {
-      GameService.start(data.seatNo, data.card);
+      GameService.start();
     });
   }
 
@@ -139,7 +159,6 @@ export default class Game extends Vue {
         seatedPlayers: data.seatedPlayers,
         players: data.players
       });
-      this.players = data.players;
       this.seatedPlayers = data.seatedPlayers;
     });
   }
@@ -198,8 +217,36 @@ export default class Game extends Vue {
   bottom: 5px;
 }
 
-.card-detail-desktop,
+.card-detail-desktop {
+  position: fixed;
+  top: 75px;
+  left: 15px;
+  width: 350px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
 .player-detail-desktop {
+  position: fixed;
+  right: 15px;
+  top: 75px;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  .player-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .player {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  }
   @media (max-width: 768px) {
     display: none;
   }

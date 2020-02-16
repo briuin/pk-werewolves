@@ -1,5 +1,6 @@
 export enum RoundModal {
   Unknown,
+  PeerCard,
   WolfVote,
   SeerCheck,
   DayBreaks,

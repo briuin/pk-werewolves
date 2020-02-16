@@ -32,8 +32,11 @@ class GameService {
     this.assignedCards$.next(cards);
   }
 
-  public start(seatNo = 0, card = "") {
+  public start() {
     this.isStarted$.next(true);
+  }
+
+  public peerCard(seatNo = 0, card = "") {
     this.card$.next(CardFactory.create(card));
     this.seatNo$.next(seatNo);
   }
@@ -42,8 +45,6 @@ class GameService {
     this.isStarted$.next(game.isStarted);
     this.isAlive$.next(game.isAlive);
     this.seatNo$.next(game.seatNo);
-    this.isOwner$.next(game.isOwner);
-    this.seats$.next([]);
   }
 }
 

@@ -2,6 +2,7 @@
   <div class="card-details">
     <v-card-text class="card-slider" v-for="card in cardsCount" :key="`count${card.name}`">
       <v-slider
+        :dark="dark"
         v-if="isOwner"
         v-model="card.count"
         append-icon="mdi-plus"
@@ -61,6 +62,7 @@ import { tap } from "rxjs/operators";
   }
 })
 export default class CardDetails extends Vue {
+  @Prop() dark!: boolean;
   seats: any[] = [];
   cardsCount = [
     { name: "wolf", count: 0, max: 10 },
@@ -75,16 +77,57 @@ export default class CardDetails extends Vue {
   addCount(card: any) {
     card.count++;
     this.$socket.werewolves.emit("updateCards", { cards: this.cardsCount });
+    this.updateCards();
   }
 
   minusCount(card: any) {
     card.count--;
     this.$socket.werewolves.emit("updateCards", { cards: this.cardsCount });
+    this.updateCards();
+  }
+
+  private updateCards() {
+    const cards: string[] = [];
+    this.cardsCount.forEach(x => {
+      for (let i = 0; i < x.count; i++) {
+        cards.push(x.name);
+      }
+    });
+
+    GameService.setCards(cards);
   }
 }
 </script>
 
 <style lang="scss">
+.card-details {
+  padding-top: 24px;
+  .card-slider {
+    padding: 0px;
+  }
+  .theme--dark {
+    .v-slider__thumb-label span {
+      color: #020024;
+    }
+  }
+  .card-seat {
+    display: none;
+  }
+
+  .card-action {
+    .notequal {
+      color: red;
+    }
+  }
+
+  .v-btn {
+    margin-bottom: 10px;
+  }
+  @media (min-width: 769px) {
+    color: white;
+  }
+}
+
 @media (max-width: 768px) {
   .card-details {
     padding-top: 24px;
@@ -102,9 +145,6 @@ export default class CardDetails extends Vue {
       .card-action {
         display: flex;
         flex-direction: column;
-        .notequal {
-          color: red;
-        }
       }
       .card-seat {
         display: flex;

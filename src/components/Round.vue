@@ -1,5 +1,6 @@
 <template>
   <div>
+    <PeerCard v-if="shouldShow(RoundModal.PeerCard)" :card="data.card" />
     <Wolf v-if="shouldShow(RoundModal.WolfVote)" :seats="data.seats" :wolves="data.wolves" />
     <Seer v-if="shouldShow(RoundModal.SeerCheck)" :seats="data.seats" />
     <GameOver
@@ -20,6 +21,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PeerCard from "@/components/round/PeerCard.vue";
 import Wolf from "@/components/round/Wolf.vue";
 import Seer from "@/components/round/Seer.vue";
 import Opinion from "@/components/round/Opinion.vue";
@@ -32,6 +34,7 @@ import { RoundModal } from "@/enums/round-modal";
 
 @Component({
   components: {
+    PeerCard,
     Wolf,
     Seer,
     GameOver,

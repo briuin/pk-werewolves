@@ -1,27 +1,26 @@
 <template>
   <div class="overlay">
-    <v-form>
-      <v-container class="modal-container">
-        <v-row justify="center">
-          <v-card class="mx-auto" max-width="300" tile>
-            {{ text }}
-            <br />
-            <div
-              class="option"
-              :class="{ selected: selectedNo === seat.no }"
-              v-for="(seat, i) in seats"
-              :key="`seat${i}`"
-              @click="check(seat.no)"
-            >
-              <v-chip class="ma-2" color="primary" text-color="primary" outlined>
-                <v-avatar left class>{{ seat.no }}</v-avatar>
-                {{ seat.player.name }}
-              </v-chip>
-            </div>
-          </v-card>
-        </v-row>
-      </v-container>
-    </v-form>
+    <v-container class="modal-container">
+      <v-row justify="center">
+        <v-col cols="12">
+          <h1>預言家請查驗</h1>
+        </v-col>
+        <br />
+        <div
+          class="option"
+          :class="{ selected: selectedNo === seat.no }"
+          v-for="(seat, i) in seats"
+          :key="`seat${i}`"
+          @click="check(seat.no)"
+        >
+          <v-chip class="ma-2" color="primary" text-color="primary" outlined>
+            <v-avatar left class>{{ seat.no }}</v-avatar>
+            {{ seat.player.name }}
+          </v-chip>
+        </div>
+        <v-col cols="12">{{ result }}</v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -33,15 +32,19 @@ export default class PublicVote extends Vue {
   @Prop({ default: [] }) seats!: any[];
   text = "seer check";
   selectedNo = -1;
+  result = "";
 
   check(seatNo: number) {
+    if (this.selectedNo !== -1) {
+      return;
+    }
     this.selectedNo = seatNo;
     this.$socket.werewolves.emit("seercheck", { seatNo });
   }
 
   protected created() {
     this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
-      console.log(data);
+      this.result = data.result === "good" ? "好人" : "壞人";
     });
   }
 }
@@ -61,9 +64,13 @@ export default class PublicVote extends Vue {
   align-items: center;
 
   .modal-container {
-    max-width: 280px;
+    min-width: 280px;
+    width: 70%;
+    max-height: 350px;
+    overflow: scroll;
     background: white;
     padding: 20px 35px;
+    text-align: center;
   }
 
   .selected {

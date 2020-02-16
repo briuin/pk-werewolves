@@ -1,5 +1,10 @@
 <template>
-  <v-btn color="primary" :disabled="!isAllSeatedPlayersReady" v-if="isOwner" @click="start()">開始</v-btn>
+  <v-btn
+    color="primary"
+    :disabled="!isAllSeatedPlayersReady || seats.length !== cards.length"
+    v-if="isOwner"
+    @click="start()"
+  >開始</v-btn>
 </template>
 
 <script lang="ts">
@@ -11,7 +16,8 @@ import PlayerService from "@/services/player";
   subscriptions() {
     return {
       seats: GameService.seats$,
-      isOwner: GameService.isOwner$
+      isOwner: GameService.isOwner$,
+      cards: GameService.assignedCards$
     };
   }
 })

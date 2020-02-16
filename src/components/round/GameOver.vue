@@ -1,14 +1,12 @@
 <template>
   <div class="overlay">
-    <v-form>
-      <v-container class="modal-container">
-        <v-row justify="center">
-          <v-card class="mx-auto" max-width="300" tile>
+    <v-container class="modal-container">
+      <v-row justify="center">
+        <v-col cols="12">
+          <v-card class="mx-auto" tile>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" @click="$emit(`close`)" text
-                >Close</v-btn
-              >
+              <v-btn color="blue darken-1" @click="$emit(`close`)" text>Close</v-btn>
             </v-card-actions>
             <v-list flat>
               <v-subheader>遊戲結束: {{ title }}</v-subheader>
@@ -19,16 +17,16 @@
                   </v-list-item-icon>
                   <v-list-item-content>
                     <v-list-item-title
-                      v-text="`${seat.card} ${seat.playerName}`"
+                      v-text="`${seat.seatNo}號 ${getCardText(seat.card)} ${seat.playerName}`"
                     ></v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
           </v-card>
-        </v-row>
-      </v-container>
-    </v-form>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -42,6 +40,21 @@ export default class GameOver extends Vue {
 
   get title() {
     return this.gameWin ? "好人贏了" : "狼人贏了";
+  }
+
+  getCardText(text: string) {
+    switch (text) {
+      case "wolf":
+        return "狼人";
+      case "folk":
+        return "平民";
+      case "seer":
+        return "預言家";
+      case "witch":
+        return "女巫";
+      default:
+        return "";
+    }
   }
 }
 </script>
@@ -60,9 +73,13 @@ export default class GameOver extends Vue {
   align-items: center;
 
   .modal-container {
-    max-width: 280px;
+    min-width: 280px;
+    max-height: 350px;
+    overflow: scroll;
+    width: 70%;
     background: white;
     padding: 20px 35px;
+    text-align: center;
   }
 }
 </style>

@@ -2,6 +2,7 @@
   <div class="overlay">
     <v-form>
       <v-container class="modal-container">
+        <h1>狼人請殺人</h1>
         <v-row justify="center">
           <div
             class="vote-option"
@@ -80,9 +81,13 @@ export default class Wolf extends Vue {
   align-items: center;
 
   .modal-container {
-    max-width: 280px;
+    min-width: 280px;
+    max-height: 350px;
+    overflow: scroll;
+    width: 70%;
     background: white;
     padding: 20px 35px;
+    text-align: center;
   }
 
   .vote-option {

@@ -4,12 +4,10 @@
       <v-container class="modal-container">
         <v-row justify="center">
           <v-col cols="12">
-            <h1>投票結果</h1>
+            <h4>請確認身份</h4>
           </v-col>
-          <v-col cols="12">
-            <h4 v-if="diedSeatNos.length === 0">全員棄票</h4>
-            <h4 v-else-if="diedSeatNos.length === 1">{{ diedSeatNos[0] }}號 死了</h4>
-            <h4 v-else>{{ diedSeatNos.map(x => `${x}號`).join(", ") }} 票數一樣，繼續發表言論</h4>
+          <v-col>
+            <h1>{{ getCardText() }}</h1>
           </v-col>
         </v-row>
       </v-container>
@@ -19,10 +17,26 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Card from "@/models/card";
 
 @Component
-export default class PublicVoteResult extends Vue {
-  @Prop({ default: [] }) diedSeatNos!: number[];
+export default class PeerCard extends Vue {
+  @Prop() card!: string;
+
+  getCardText() {
+    switch (this.card) {
+      case "wolf":
+        return "狼人";
+      case "folk":
+        return "平民";
+      case "seer":
+        return "預言家";
+      case "witch":
+        return "女巫";
+      default:
+        return "";
+    }
+  }
 }
 </script>
 
@@ -40,7 +54,7 @@ export default class PublicVoteResult extends Vue {
   align-items: center;
 
   .modal-container {
-    max-width: 280px;
+    width: 280px;
     background: white;
     padding: 20px 35px;
     text-align: center;

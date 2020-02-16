@@ -8,6 +8,12 @@ export default class Card {
   constructor() {
     this.roundActionMapping.push(
       {
+        round: "peercard",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.PeerCard, data);
+        }
+      },
+      {
         round: "daybreaks",
         action: (data: any) => {
           RoundService.showModal(RoundModal.DayBreaks, data);
