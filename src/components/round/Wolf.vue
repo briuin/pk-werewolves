@@ -20,6 +20,23 @@
             </v-chip>
             <span>{{ getSeatVoteTexts(option.no) }}</span>
           </div>
+          <v-col cols="12" class="chat-group" ref="chats">
+            <p class="wolf-chat" v-for="(chat, i) in chats" :key="`chat${i}`">{{ chat }}</p>
+          </v-col>
+          <v-col cols="12" style="padding: 0">
+            <v-text-field
+              v-model="message"
+              append-outer-icon="mdi-send"
+              filled
+              clear-icon="mdi-close-circle"
+              clearable
+              label="Message"
+              type="text"
+              @keydown.enter.prevent.stop="sendMessage"
+              @click:append-outer="sendMessage"
+              @click:clear="clearMessage"
+            ></v-text-field>
+          </v-col>
         </v-row>
       </v-container>
     </v-form>
@@ -34,9 +51,21 @@ export default class Wolf extends Vue {
   @Prop() seats!: any[];
   @Prop({ default: () => [] }) wolves!: any[];
   wolfVotes: number[] = [];
+  chats = [];
+  message = "";
 
   get voteOptions() {
-    return this.seats || [];
+    return (
+      this.seats || [
+        { no: 1, player: { name: "2fwafaw22" } },
+        { player: { name: "222gwa" } },
+        { player: { name: "22gwa2" } }
+      ]
+    );
+  }
+
+  get chatElement() {
+    return this.$refs.chats as HTMLElement;
   }
 
   get wolfOptions() {
@@ -51,6 +80,18 @@ export default class Wolf extends Vue {
       .join(",");
   }
 
+  sendMessage() {
+    if (!this.message) {
+      return;
+    }
+    this.$socket.werewolves.emit("sendwolftalk", { message: this.message });
+    this.clearMessage();
+  }
+
+  clearMessage() {
+    this.message = "";
+  }
+
   isWolf(seatNo: number) {
     return this.wolves.find(x => x.no === seatNo);
   }
@@ -62,6 +103,15 @@ export default class Wolf extends Vue {
   protected created() {
     this.sockets.werewolves.subscribe("wolfvote", (data: any) => {
       this.$set(this.wolfVotes, data.wolfSeatNo, data.targetSeatNo);
+    });
+
+    this.sockets.werewolves.subscribe("wolftalk", (data: any) => {
+      this.chats = data.messages;
+      Vue.nextTick(() => {
+        if (this.chatElement) {
+          this.chatElement.scrollTop = this.chatElement.scrollHeight;
+        }
+      });
     });
   }
 }
@@ -87,6 +137,7 @@ export default class Wolf extends Vue {
     width: 70%;
     background: white;
     padding: 20px 35px;
+    padding-bottom: 0;
     text-align: center;
   }
 
@@ -95,11 +146,39 @@ export default class Wolf extends Vue {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+      width: 44%;
+      margin: 0 2%;
+    }
+  }
+
+  .chat-group {
+    height: 120px;
+    overflow: scroll;
+  }
+
+  .wolf-chat {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    text-align: left;
+    padding: 3px 10px;
   }
 
   .vote-option,
   .vote-option .v-chip {
     cursor: pointer;
+  }
+}
+</style>
+
+<style lang="scss">
+@media (max-width: 768px) {
+  .overlay .v-chip .v-chip__content {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 2;
   }
 }
 </style>

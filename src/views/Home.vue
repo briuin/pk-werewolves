@@ -2,24 +2,17 @@
   <v-container>
     <v-layout>
       <div class="game-menu">
-        <v-btn
-          color="success"
-          :disabled="isCreatingGame"
-          dark
-          @click="createGame()"
-          >新遊戲</v-btn
-        >
+        <v-btn color="success" :disabled="isCreatingGame" dark @click="createGame()">新遊戲</v-btn>
         <v-btn
           color="error"
           :disabled="isCreatingGame"
           dark
           @click="backToGame()"
           v-if="joinedGame"
-          >回到遊戲</v-btn
-        >
+        >回到遊戲</v-btn>
       </div>
     </v-layout>
-    <GameList :games="games" />
+    <GameList :games="games" :joinedGame="joinedGame" />
   </v-container>
 </template>
 

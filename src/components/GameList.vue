@@ -9,15 +9,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="game in games"
-          :key="game.id"
-          @click="selectedGame = game.id"
-        >
+        <tr v-for="game in games" :key="game.id" @click="selectedGame = game.id">
           <td>{{ game.id }}</td>
           <td>{{ game.owner }}</td>
           <td>
-            {{ game.players.length }}
+            {{ game.seats.length }}
             /
             {{ game.players.length }}
             <v-btn
@@ -27,9 +23,10 @@
               dark
               x-small
               @click="joinGame(game.id)"
-              v-if="selectedGame === game.id"
-              ><v-icon>mdi-arrow-right-bold-circle</v-icon></v-btn
+              v-if="selectedGame === game.id && !joinedGame"
             >
+              <v-icon>mdi-arrow-right-bold-circle</v-icon>
+            </v-btn>
           </td>
         </tr>
       </tbody>
@@ -44,6 +41,7 @@ import PlayerService from "@/services/player";
 @Component
 export default class GameList extends Vue {
   @Prop() games!: any[];
+  @Prop() joinedGame!: boolean;
   selectedGame = null;
 
   joinGame(gameId: number) {

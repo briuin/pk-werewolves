@@ -46,13 +46,20 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="!isGameStarted" @click="showCancelableDialog()" text>
-        <span class="mr-2">{{ playerName }}</span>
-        <v-icon>mdi-account-edit</v-icon>
-      </v-btn>
-      <v-btn v-else text>
-        <span class="mr-2">{{ playerName }}</span>
-      </v-btn>
+      <template v-if="isHomePage">
+        <v-btn v-if="!isGameStarted" @click="showCancelableDialog()" text>
+          <span class="mr-2">{{ playerName }}</span>
+          <v-icon>mdi-account-edit</v-icon>
+        </v-btn>
+        <v-btn v-else text>
+          <span class="mr-2">{{ playerName }}</span>
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn color="red" v-if="!isGameStarted" @click="leaveGame()" text>
+          <span class="mr-2">退出</span>
+        </v-btn>
+      </template>
     </v-app-bar>
 
     <v-content>
@@ -71,9 +78,10 @@
 <script lang="ts">
 import NameDialog from "@/components/NameDialog.vue";
 import Round from "@/components/Round.vue";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import PlayerService from "@/services/player";
 import GameService from "@/services/game";
+import { Route } from "vue-router";
 
 @Component({
   components: {
@@ -96,6 +104,12 @@ export default class App extends Vue {
     cancelable: false
   };
   isShowCard = false;
+  isHomePage = false;
+
+  @Watch("$route", { immediate: true, deep: true })
+  onUrlChange(newRoute: Route) {
+    this.isHomePage = newRoute.name === "home";
+  }
 
   setName(name: string) {
     PlayerService.setName(name);
@@ -106,6 +120,11 @@ export default class App extends Vue {
   showCancelableDialog() {
     this.nameDialogOptions.cancelable = true;
     this.showNameDialog = true;
+  }
+
+  leaveGame() {
+    this.$socket.werewolves.emit("leave");
+    this.goToHome();
   }
 
   goToHome() {

@@ -14,13 +14,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-btn
-            class="ma-2"
-            :loading="false"
-            :disabled="false"
-            color="info"
-            @click="confirm()"
-          >
+          <v-btn class="ma-2" :loading="false" :disabled="false" color="info" @click="confirm()">
             Confirm
             <template v-slot:loader>
               <span class="custom-loader">
@@ -51,11 +45,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import PlayerService from "@/services/player";
 
 @Component
 export default class NameDialog extends Vue {
   @Prop() options: any;
-  name = "";
+  name = PlayerService.getName();
   confirm() {
     if (!this.name && this.name.length > 30) {
       return;
