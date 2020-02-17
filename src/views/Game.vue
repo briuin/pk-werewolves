@@ -1,5 +1,16 @@
 <template>
   <v-container>
+    <div class="card-detail-mobile">
+      <v-badge
+        inline
+        :content="x.no || i + 1"
+        color="transparent"
+        bordered
+        :class="{ died: !x.isAlive }"
+        v-for="(x, i) in seats"
+        :key="`icon${x.no || i + 1}`"
+      ></v-badge>
+    </div>
     <div class="player-detail-mobile">
       人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
       {{ players.length - seatedPlayers.length }}
@@ -260,6 +271,46 @@ export default class Game extends Vue {
     top: 60px;
     right: 5px;
     color: white;
+  }
+}
+
+.card-detail-mobile {
+  display: none;
+  @media (max-width: 768px) {
+    width: 150px;
+    flex-wrap: wrap;
+    > * {
+      flex-basis: 15%;
+      margin: 3% 0;
+      margin-right: auto;
+    }
+    display: flex;
+    position: fixed;
+    top: 60px;
+    left: 5px;
+    color: white;
+  }
+}
+</style>
+
+<style lang="scss">
+.card-detail-mobile {
+  @media (max-width: 768px) {
+    .v-badge__badge {
+      color: #00bfff;
+      &::after {
+        border-color: hsl(195, 100%, 50%) !important;
+      }
+    }
+
+    .died {
+      .v-badge__badge {
+        color: red;
+        &::after {
+          border-color: red !important;
+        }
+      }
+    }
   }
 }
 </style>
