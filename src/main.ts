@@ -10,18 +10,10 @@ Vue.config.productionTip = false;
 
 Vue.use(
   new VueSocketIO({
-    connection: `http://localhost:3003/chat`,
-    options: {
-      useConnectionNamespace: true,
-      namespaceName: "chat"
-    },
-    debug: true
-  })
-);
-
-Vue.use(
-  new VueSocketIO({
-    connection: `http://localhost:3003/werewolves`,
+    connection:
+      process.env.NODE_ENV === "production"
+        ? "https://pk-center.herokuapp.com/werewolves"
+        : "http://localhost:3000/werewolves",
     options: { useConnectionNamespace: true },
     debug: true
   })
