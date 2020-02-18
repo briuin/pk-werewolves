@@ -105,6 +105,7 @@ export default class App extends Vue {
   };
   isShowCard = false;
   isHomePage = false;
+  isGameStarted = false;
 
   @Watch("$route", { immediate: true, deep: true })
   onUrlChange(newRoute: Route) {
@@ -112,12 +113,18 @@ export default class App extends Vue {
   }
 
   setName(name: string) {
+    this.showNameDialog = false;
+    if (this.isGameStarted) {
+      return;
+    }
     PlayerService.setName(name);
     this.playerName = name;
-    this.showNameDialog = false;
   }
 
   showCancelableDialog() {
+    if (this.isGameStarted) {
+      return;
+    }
     this.nameDialogOptions.cancelable = true;
     this.showNameDialog = true;
   }
