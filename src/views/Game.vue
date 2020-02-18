@@ -141,7 +141,10 @@ export default class Game extends Vue {
     });
 
     const id = this.$route.params.id;
-    this.$socket.werewolves.emit("gamedetails", { id });
+    this.$socket.werewolves.emit("gamedetails", {
+      id,
+      playerName: PlayerService.getName()
+    });
     this.subscribeGameStart();
     this.subscribePlayers();
     this.subscribeRound();
