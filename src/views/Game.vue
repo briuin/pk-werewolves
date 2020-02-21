@@ -136,6 +136,10 @@ export default class Game extends Vue {
         this.$router.push("/");
         return;
       }
+      if (data.isStarted) {
+        GameService.start();
+      }
+      GameService.peerCard(data.seatNo, data.card);
       GameService.setOwner(data.owner);
       GameService.setCards(data.cards);
     });

@@ -17,6 +17,7 @@
       ></v-slider>
       <v-slider
         v-else
+        :dark="dark"
         v-model="card.count"
         readonly
         :thumb-size="24"
