@@ -1,5 +1,5 @@
 <template>
-  <div class="action-group">
+  <div class="action-group" :class="{ 'move-front': isGameStarted }">
     <template v-if="!isGameStarted">
       <Sit />
       <Stand />
@@ -63,5 +63,9 @@ export default class JoinActionGroup extends Vue {
     font-size: 18px;
     width: 180px;
   }
+}
+
+.move-front {
+  z-index: 5000;
 }
 </style>

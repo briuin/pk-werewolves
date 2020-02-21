@@ -233,6 +233,9 @@ export default class Game extends Vue {
   position: fixed;
   right: 10px;
   bottom: 5px;
+  @media (max-width: 768px) {
+    display: none;
+  }
 }
 
 .card-detail-desktop {

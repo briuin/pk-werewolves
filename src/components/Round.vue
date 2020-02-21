@@ -3,6 +3,12 @@
     <PeerCard v-if="shouldShow(RoundModal.PeerCard)" :card="data.card" />
     <Wolf v-if="shouldShow(RoundModal.WolfVote)" :seats="data.seats" :wolves="data.wolves" />
     <Seer v-if="shouldShow(RoundModal.SeerCheck)" :seats="data.seats" />
+    <Witch
+      v-if="shouldShow(RoundModal.WitchWork)"
+      :seats="data.seats"
+      :diedSeatNo="data.diedSeatNo"
+      :step="data.step"
+    />
     <GameOver
       :seats="data.seats"
       :gameWin="data.gameWin"
@@ -24,6 +30,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import PeerCard from "@/components/round/PeerCard.vue";
 import Wolf from "@/components/round/Wolf.vue";
 import Seer from "@/components/round/Seer.vue";
+import Witch from "@/components/round/Witch.vue";
 import Opinion from "@/components/round/Opinion.vue";
 import PublicVote from "@/components/round/PublicVote.vue";
 import PublicVoteResult from "@/components/round/PublicVoteResult.vue";
@@ -37,6 +44,7 @@ import { RoundModal } from "@/enums/round-modal";
     PeerCard,
     Wolf,
     Seer,
+    Witch,
     GameOver,
     DayBreaks,
     Opinion,

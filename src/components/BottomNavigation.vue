@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation horizontal app grow>
+  <v-bottom-navigation horizontal app grow :class="{'move-front': isGameStarted}">
     <template v-if="isGameStarted">
       <v-btn>
         <span>{{ title }}</span>
@@ -57,6 +57,9 @@ export default class BottomNavigation extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.move-front {
+  z-index: 5000;
+}
 .v-bottom-navigation button {
   max-width: inherit !important;
   &::before {

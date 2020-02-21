@@ -1,9 +1,18 @@
 <template>
   <div class="overlay">
     <v-container class="modal-container">
-      <v-row justify="center">
+      <v-row justify="center" v-if="step === 'save'">
         <v-col cols="12">
-          <h1>預言家請查驗</h1>
+          <h1>{{ diedSeatNo }}號死了，女巫要救他嗎？</h1>
+        </v-col>
+        <v-col class="save-option">
+          <v-btn @click="save(true)">救</v-btn>
+          <v-btn @click="save(false)">不救</v-btn>
+        </v-col>
+      </v-row>
+      <v-row justify="center" v-if="step === 'poison'">
+        <v-col cols="12">
+          <h1>女巫要使用毒藥嗎？ 你要毒誰呢？</h1>
         </v-col>
         <br />
         <div
@@ -11,14 +20,13 @@
           :class="{ selected: selectedNo === seat.no }"
           v-for="(seat, i) in seats"
           :key="`seat${i}`"
-          @click="check(seat.no)"
+          @click="poison(seat.no)"
         >
           <v-chip class="ma-2" color="primary" text-color="primary" outlined>
             <v-avatar left class>{{ seat.no }}</v-avatar>
-            {{ seat.player.name }}
+            {{ seat.name }}
           </v-chip>
         </div>
-        <v-col cols="12">{{ result }}</v-col>
       </v-row>
     </v-container>
   </div>
@@ -28,24 +36,27 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class Seer extends Vue {
-  @Prop({ default: () => [] }) seats!: any[];
-  text = "seer check";
+export default class Witch extends Vue {
+  @Prop({ default: () => [{ no: 2 }] }) seats!: any[];
+  @Prop() step!: string;
+  @Prop() diedSeatNo!: number;
   selectedNo = -1;
-  result = "";
+  saved = false;
 
-  check(seatNo: number) {
+  save(willSave: boolean) {
+    if (this.saved) {
+      return;
+    }
+    this.saved;
+    this.$socket.werewolves.emit("witchsave", { willSave });
+  }
+
+  poison(seatNo: number) {
     if (this.selectedNo !== -1) {
       return;
     }
     this.selectedNo = seatNo;
-    this.$socket.werewolves.emit("seercheck", { seatNo });
-  }
-
-  protected created() {
-    this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
-      this.result = data.result === "good" ? "好人" : "壞人";
-    });
+    this.$socket.werewolves.emit("witchpoison", { seatNo });
   }
 }
 </script>
@@ -71,6 +82,13 @@ export default class Seer extends Vue {
     background: white;
     padding: 20px 35px;
     text-align: center;
+  }
+
+  .save-option {
+    width: 280px;
+    max-width: 280px;
+    display: flex;
+    justify-content: space-around;
   }
 
   .selected {
