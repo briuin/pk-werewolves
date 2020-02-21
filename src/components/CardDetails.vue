@@ -1,6 +1,6 @@
 <template>
   <div class="card-details">
-    <v-card-text class="card-slider" v-for="card in cardsCount" :key="`count${card.name}`">
+    <v-card-text class="card-slider" v-for="card in cardsToDisplay" :key="`count${card.name}`">
       <v-slider
         :dark="dark"
         v-if="isOwner"
@@ -32,7 +32,15 @@
         <div>就坐人數： {{ seats.length }}</div>
         <div :class="{ notequal: seats.length !== cardLength }">身份卡數： {{ cardLength }}</div>
       </div>
-      <div class="card-seat">
+      <div class="card-pagination">
+        <v-btn @click="previousCards" class="mx-2" fab small color="#f5f5f5">
+          <v-icon>mdi-less-than</v-icon>
+        </v-btn>
+        <v-btn @click="nextCards" class="mx-2" fab small color="#f5f5f5">
+          <v-icon>mdi-greater-than</v-icon>
+        </v-btn>
+      </div>
+      <div v-if="false" class="card-seat">
         <p class="seat" v-for="(seat, i) in seats" :key="`seat${i}`">{{ i + 1 }} : {{ seat.name }}</p>
       </div>
     </div>
@@ -57,6 +65,9 @@ import { tap } from "rxjs/operators";
             const count = cards.filter((c: any) => c === x.name).length;
             x.count = count;
           });
+          if ((this as any).cardsCount.length > 0) {
+            (this as any).cardsToDisplay = (this as any).cardsCount.slice(0, 3);
+          }
         })
       )
     };
@@ -71,6 +82,9 @@ export default class CardDetails extends Vue {
     { name: "seer", count: 0, max: 1 },
     { name: "witch", count: 0, max: 1 }
   ];
+  currentCardPageStartIndex = 0;
+
+  cardsToDisplay: any[] = [];
 
   get cardLength() {
     return this.cardsCount.reduce((x, y) => x + y.count, 0);
@@ -86,6 +100,28 @@ export default class CardDetails extends Vue {
     card.count--;
     this.$socket.werewolves.emit("updateCards", { cards: this.cardsCount });
     this.updateCards();
+  }
+
+  previousCards() {
+    if (this.currentCardPageStartIndex <= 0) {
+      return;
+    }
+    this.cardsToDisplay = this.cardsCount.slice(
+      this.currentCardPageStartIndex - 3,
+      3
+    );
+    this.currentCardPageStartIndex -= 3;
+  }
+
+  nextCards() {
+    if (this.cardsCount.length <= this.currentCardPageStartIndex + 3) {
+      return;
+    }
+    this.cardsToDisplay = this.cardsCount.slice(
+      this.currentCardPageStartIndex + 3,
+      this.currentCardPageStartIndex + 6
+    );
+    this.currentCardPageStartIndex += 3;
   }
 
   private updateCards() {
@@ -122,6 +158,17 @@ export default class CardDetails extends Vue {
     }
   }
 
+  .card-pagination {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .card-content {
+    display: flex;
+    flex-direction: row;
+  }
+
   .v-btn {
     margin-bottom: 10px;
   }
@@ -149,7 +196,7 @@ export default class CardDetails extends Vue {
         flex-direction: column;
       }
       .card-seat {
-        display: flex;
+        display: none;
         flex-direction: column;
         overflow: scroll;
         max-height: 160px;

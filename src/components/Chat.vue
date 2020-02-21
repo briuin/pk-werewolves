@@ -114,6 +114,9 @@ export default class Chat extends Vue {
     });
 
     this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
+      if (!data.messages) {
+        return;
+      }
       this.messages = [...data.messages, ...this.messages];
     });
   }
