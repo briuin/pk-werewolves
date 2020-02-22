@@ -8,7 +8,8 @@
           </v-col>
           <v-col cols="12">
             <h4 v-if="diedSeatNos.length === 0">全員棄票</h4>
-            <h4 v-else-if="diedSeatNos.length === 1">{{ diedSeatNos[0] }}號 死了</h4>
+            <h4 v-else-if="diedSeatNos.length === 1">{{ diedSeatNos[0] }}號 淘汰</h4>
+            <h4 v-else-if="isSecondVote">{{ diedSeatNos.map(x => `${x}號`).join(", ") }} 淘汰</h4>
             <h4 v-else>{{ diedSeatNos.map(x => `${x}號`).join(", ") }} 票數一樣，繼續發表言論</h4>
           </v-col>
         </v-row>
@@ -23,6 +24,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component
 export default class PublicVoteResult extends Vue {
   @Prop({ default: [] }) diedSeatNos!: number[];
+  @Prop() isSecondVote!: boolean;
 }
 </script>
 

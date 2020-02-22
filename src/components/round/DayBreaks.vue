@@ -7,7 +7,7 @@
             <h1>天亮了</h1>
           </v-col>
           <v-col cols="12">
-            <h4 v-if="diedPlayers.length > 0">{{ diedPlayers.map(x => `${x}號`).join(", ") }} 死了</h4>
+            <h4 v-if="diedPlayers.length > 0">{{ diedPlayers.map(x => `${x}號`).join(", ") }} 淘汰</h4>
             <h4 v-else>昨晚是平安夜</h4>
           </v-col>
         </v-row>

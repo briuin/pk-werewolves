@@ -21,6 +21,7 @@
     <PublicVoteResult
       v-if="shouldShow(RoundModal.PublicVoteResult)"
       :diedSeatNos="data.diedSeatNos"
+      :isSecondVote="data.isSecondVote"
     />
   </div>
 </template>
