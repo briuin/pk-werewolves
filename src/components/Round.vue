@@ -37,6 +37,7 @@ import PublicVoteResult from "@/components/round/PublicVoteResult.vue";
 import GameOver from "@/components/round/GameOver.vue";
 import DayBreaks from "@/components/round/DayBreaks.vue";
 import RoundService from "@/services/round";
+import GameService from "@/services/game";
 import { RoundModal } from "@/enums/round-modal";
 
 @Component({
@@ -50,15 +51,21 @@ import { RoundModal } from "@/enums/round-modal";
     Opinion,
     PublicVote,
     PublicVoteResult
+  },
+  subscriptions() {
+    return {
+      isPlayerAlive: GameService.isAlive$
+    };
   }
 })
 export default class Round extends Vue {
   RoundModal = RoundModal;
   modal = RoundModal.Unknown;
   data: any = {};
+  isPlayerAlive = true;
 
   shouldShow(modal: RoundModal) {
-    return this.modal === modal;
+    return this.modal === modal && this.isPlayerAlive;
   }
 
   end() {
