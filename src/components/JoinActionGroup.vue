@@ -20,6 +20,7 @@ import Stand from "@/components/join-action-group/Stand.vue";
 import Ready from "@/components/join-action-group/Ready.vue";
 import Start from "@/components/join-action-group/Start.vue";
 import GameService from "@/services/game";
+import { getTitle } from "@/translations/info-title";
 
 @Component({
   components: {
@@ -44,7 +45,7 @@ export default class JoinActionGroup extends Vue {
 
   private subscribeInfo() {
     this.sockets.werewolves.subscribe("info", (data: any) => {
-      this.title = data.title;
+      this.title = getTitle(data.title);
       this.time = data.time;
     });
   }

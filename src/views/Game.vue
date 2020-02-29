@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="card-detail-mobile">
+    <div class="card-detail-mobile" :class="{ 'over-ten': seats.length >= 10 }">
       <v-badge
         inline
         :content="x.no || i + 1"
@@ -292,7 +292,11 @@ export default class Game extends Vue {
     > * {
       flex-basis: 15%;
       margin: 3% 0;
-      margin-right: auto;
+    }
+    &.over-ten {
+      > * {
+        margin-right: auto;
+      }
     }
     display: flex;
     position: fixed;
