@@ -54,7 +54,7 @@ export default class Wolf extends Vue {
   @Prop() seats!: any[];
   @Prop({ default: () => [] }) wolves!: any[];
   wolfVotes: number[] = [];
-  chats = ["wafaw", "af", "gaga", "gwa"];
+  chats = [];
   message = "";
 
   get voteOptions() {
