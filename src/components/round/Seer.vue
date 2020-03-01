@@ -48,7 +48,7 @@ export default class Seer extends Vue {
   protected created() {
     this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
       this.result =
-        `${this.selectedNo}號是` + data.result === "good" ? "好人" : "壞人";
+        `${this.selectedNo}號是` + (data.result === "good" ? "好人" : "壞人");
     });
   }
 }
