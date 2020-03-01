@@ -3,23 +3,21 @@
     <v-form>
       <v-container class="modal-container">
         <h1>狼人請殺人</h1>
+        <span class="description">
+          <span></span>是狼人
+        </span>
         <v-row justify="center">
-          <div
-            class="vote-option"
-            v-for="(option, index) in voteOptions"
-            :key="'vote' + index"
-            @click="vote(option.no)"
-          >
-            <v-chip v-if="isWolf(option.no)" class="ma-2" color="pink" text-color="white">
-              <v-avatar left class>{{ option.no }}</v-avatar>
-              {{ option.player.name }}
-            </v-chip>
-            <v-chip v-else class="ma-2" color="primary" text-color="primary" outlined>
-              <v-avatar left>{{ option.no }}</v-avatar>
-              {{ option.player.name }}
-            </v-chip>
-            <span>{{ getSeatVoteTexts(option.no) }}</span>
-          </div>
+          <v-col cols="12" class="vote-group">
+            <div
+              class="vote-option"
+              v-for="(option, index) in voteOptions"
+              :key="'vote' + index"
+              @click="vote(option.no)"
+            >
+              <SeatChip :no="option.no" :name="option.player.name" :wolf="isWolf(option.no)" />
+              <span>{{ getSeatVoteTexts(option.no) }}</span>
+            </div>
+          </v-col>
           <v-col cols="12" class="chat-group" ref="chats">
             <p class="wolf-chat" v-for="(chat, i) in chats" :key="`chat${i}`">{{ chat }}</p>
           </v-col>
@@ -45,23 +43,22 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import SeatChip from "@/components/ui/SeatChip.vue";
 
-@Component
+@Component({
+  components: {
+    SeatChip
+  }
+})
 export default class Wolf extends Vue {
   @Prop() seats!: any[];
   @Prop({ default: () => [] }) wolves!: any[];
   wolfVotes: number[] = [];
-  chats = [];
+  chats = ["wafaw", "af", "gaga", "gwa"];
   message = "";
 
   get voteOptions() {
-    return (
-      this.seats || [
-        { no: 1, player: { name: "2fwafaw22" } },
-        { player: { name: "222gwa" } },
-        { player: { name: "22gwa2" } }
-      ]
-    );
+    return this.seats || [];
   }
 
   get chatElement() {
@@ -93,7 +90,7 @@ export default class Wolf extends Vue {
   }
 
   isWolf(seatNo: number) {
-    return this.wolves.find(x => x.no === seatNo);
+    return this.wolves.find(x => x.no === seatNo) || seatNo === 1;
   }
 
   vote(seatNo: number) {
@@ -132,8 +129,7 @@ export default class Wolf extends Vue {
 
   .modal-container {
     min-width: 280px;
-    max-height: 350px;
-    overflow: scroll;
+    max-height: 430px;
     width: 70%;
     background: white;
     padding: 20px 35px;
@@ -141,44 +137,49 @@ export default class Wolf extends Vue {
     text-align: center;
   }
 
+  .description {
+    span {
+      height: 12px;
+      width: 12px;
+      display: inline-flex;
+      margin-right: 5px;
+      background-color: #e91e63;
+    }
+  }
+
+  .vote-group {
+    padding: 0;
+    max-height: 170px;
+    overflow: scroll;
+  }
+
   .vote-option {
-    display: flex;
+    display: inline-block;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
     @media (max-width: 768px) {
-      width: 44%;
+      width: 41%;
       margin: 0 2%;
     }
   }
 
   .chat-group {
-    height: 120px;
+    height: 90px;
     overflow: scroll;
   }
 
   .wolf-chat {
-    border: 1px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     text-align: left;
     padding: 3px 10px;
+    margin: 0;
   }
 
   .vote-option,
   .vote-option .v-chip {
     cursor: pointer;
-  }
-}
-</style>
-
-<style lang="scss">
-@media (max-width: 768px) {
-  .overlay .v-chip .v-chip__content {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 2;
   }
 }
 </style>
