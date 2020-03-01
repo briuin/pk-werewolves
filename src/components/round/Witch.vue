@@ -22,10 +22,10 @@
           :key="`seat${i}`"
           @click="poison(seat.no)"
         >
-          <v-chip class="ma-2" color="primary" text-color="primary" outlined>
-            <v-avatar left class>{{ seat.no }}</v-avatar>
-            {{ seat.name }}
-          </v-chip>
+          <SeatChip :no="seat.no" :name="seat.name" />
+        </div>
+        <div class="option" :class="{ selected: skipped }" @click="skip()">
+          <SeatChip name="跳過" />
         </div>
       </v-row>
     </v-container>
@@ -34,14 +34,20 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import SeatChip from "@/components/ui/SeatChip.vue";
 
-@Component
+@Component({
+  components: {
+    SeatChip
+  }
+})
 export default class Witch extends Vue {
-  @Prop({ default: () => [{ no: 2 }] }) seats!: any[];
+  @Prop({ default: () => [] }) seats!: any[];
   @Prop() step!: string;
   @Prop() diedSeatNo!: number;
-  selectedNo = -1;
+  selectedNo = 0;
   saved = false;
+  skipped = false;
 
   save(willSave: boolean) {
     if (this.saved) {
@@ -52,11 +58,19 @@ export default class Witch extends Vue {
   }
 
   poison(seatNo: number) {
-    if (this.selectedNo !== -1) {
+    if (this.selectedNo || this.skipped) {
       return;
     }
     this.selectedNo = seatNo;
     this.$socket.werewolves.emit("witchpoison", { seatNo });
+  }
+
+  skip() {
+    if (this.selectedNo || this.skipped) {
+      return;
+    }
+    this.skipped = true;
+    this.$socket.werewolves.emit("witchskip");
   }
 }
 </script>

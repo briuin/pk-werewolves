@@ -1,6 +1,6 @@
 <template>
   <v-chip class="ma-2 seat-chip" :color="getColor" :text-color="getTextColor" :outlined="outlined">
-    <v-avatar left>{{ no }}</v-avatar>
+    <v-avatar left v-if="no">{{ no }}</v-avatar>
     {{ name }}
   </v-chip>
 </template>
