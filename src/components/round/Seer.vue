@@ -6,18 +6,17 @@
           <h1>預言家請查驗</h1>
         </v-col>
         <br />
-        <div
-          class="option"
-          :class="{ selected: selectedNo === seat.no }"
-          v-for="(seat, i) in seats"
-          :key="`seat${i}`"
-          @click="check(seat.no)"
-        >
-          <v-chip class="ma-2" color="primary" text-color="primary" outlined>
-            <v-avatar left class>{{ seat.no }}</v-avatar>
-            {{ seat.player.name }}
-          </v-chip>
-        </div>
+        <v-col cols="12" style="padding: 0px;" v-if="!selectedNo">
+          <div
+            class="option"
+            :class="{ selected: selectedNo === seat.no }"
+            v-for="(seat, i) in seats"
+            :key="`seat${i}`"
+            @click="check(seat.no)"
+          >
+            <SeatChip :no="seat.no" :name="seat.player.name" />
+          </div>
+        </v-col>
         <v-col cols="12">{{ result }}</v-col>
       </v-row>
     </v-container>
@@ -26,16 +25,20 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
+import SeatChip from "@/components/ui/SeatChip.vue";
 
-@Component
+@Component({
+  components: {
+    SeatChip
+  }
+})
 export default class Seer extends Vue {
   @Prop({ default: () => [] }) seats!: any[];
-  text = "seer check";
-  selectedNo = -1;
+  selectedNo = 0;
   result = "";
 
   check(seatNo: number) {
-    if (this.selectedNo !== -1) {
+    if (this.selectedNo) {
       return;
     }
     this.selectedNo = seatNo;
@@ -44,7 +47,8 @@ export default class Seer extends Vue {
 
   protected created() {
     this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
-      this.result = data.result === "good" ? "好人" : "壞人";
+      this.result =
+        `${this.selectedNo}號是` + data.result === "good" ? "好人" : "壞人";
     });
   }
 }
