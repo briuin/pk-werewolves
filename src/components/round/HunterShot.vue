@@ -1,23 +1,22 @@
 <template>
-  <div class="overlay">
+  <div class="overlay" v-if="!selectedNo">
     <v-container class="modal-container">
       <v-row justify="center">
         <v-col cols="12">
-          <h1>預言家請查驗</h1>
+          <h1>獵人請射殺</h1>
         </v-col>
         <br />
-        <v-col cols="12" style="padding: 0px;" v-if="!selectedNo">
+        <v-col cols="12" style="padding: 0px;">
           <div
             class="option"
             :class="{ selected: selectedNo === seat.no }"
             v-for="(seat, i) in seats"
             :key="`seat${i}`"
-            @click="check(seat.no)"
+            @click="shot(seat.no)"
           >
             <SeatChip :no="seat.no" :name="seat.name" />
           </div>
         </v-col>
-        <v-col cols="12">{{ result }}</v-col>
       </v-row>
     </v-container>
   </div>
@@ -32,24 +31,16 @@ import SeatChip from "@/components/ui/SeatChip.vue";
     SeatChip
   }
 })
-export default class Seer extends Vue {
+export default class HunterShot extends Vue {
   @Prop({ default: () => [] }) seats!: any[];
   selectedNo = 0;
-  result = "";
 
-  check(seatNo: number) {
+  shot(seatNo: number) {
     if (this.selectedNo) {
       return;
     }
     this.selectedNo = seatNo;
-    this.$socket.werewolves.emit("seercheck", { seatNo });
-  }
-
-  protected created() {
-    this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
-      this.result =
-        `${this.selectedNo}號是` + (data.result === "good" ? "好人" : "壞人");
-    });
+    this.$socket.werewolves.emit("huntershot", { seatNo });
   }
 }
 </script>

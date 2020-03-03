@@ -65,9 +65,6 @@ import { tap } from "rxjs/operators";
             const count = cards.filter((c: any) => c === x.name).length;
             x.count = count;
           });
-          if ((this as any).cardsCount.length > 0) {
-            (this as any).cardsToDisplay = (this as any).cardsCount.slice(0, 3);
-          }
         })
       )
     };
@@ -80,14 +77,22 @@ export default class CardDetails extends Vue {
     { name: "wolf", count: 0, max: 10 },
     { name: "folk", count: 0, max: 10 },
     { name: "seer", count: 0, max: 1 },
-    { name: "witch", count: 0, max: 1 }
+    { name: "witch", count: 0, max: 1 },
+    { name: "hunter", count: 0, max: 1 }
   ];
-  currentCardPageStartIndex = 0;
 
-  cardsToDisplay: any[] = [];
+  currentCardPageIndex = 0;
+  countPerPage = 3;
 
   get cardLength() {
     return this.cardsCount.reduce((x, y) => x + y.count, 0);
+  }
+
+  get cardsToDisplay() {
+    return this.cardsCount.slice(
+      this.countPerPage * this.currentCardPageIndex,
+      this.countPerPage * this.currentCardPageIndex + this.countPerPage
+    );
   }
 
   addCount(card: any) {
@@ -103,25 +108,20 @@ export default class CardDetails extends Vue {
   }
 
   previousCards() {
-    if (this.currentCardPageStartIndex <= 0) {
+    if (this.currentCardPageIndex <= 0) {
       return;
     }
-    this.cardsToDisplay = this.cardsCount.slice(
-      this.currentCardPageStartIndex - 3,
-      3
-    );
-    this.currentCardPageStartIndex -= 3;
+    this.currentCardPageIndex--;
   }
 
   nextCards() {
-    if (this.cardsCount.length <= this.currentCardPageStartIndex + 3) {
+    if (
+      this.cardsCount.length <=
+      this.currentCardPageIndex * this.countPerPage + this.countPerPage
+    ) {
       return;
     }
-    this.cardsToDisplay = this.cardsCount.slice(
-      this.currentCardPageStartIndex + 3,
-      this.currentCardPageStartIndex + 6
-    );
-    this.currentCardPageStartIndex += 3;
+    this.currentCardPageIndex++;
   }
 
   private updateCards() {

@@ -52,6 +52,8 @@ export default class GameOver extends Vue {
         return "預言家";
       case "witch":
         return "女巫";
+      case "hunter":
+        return "獵人";
       default:
         return "";
     }

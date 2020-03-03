@@ -20,6 +20,12 @@ export default class Card {
         }
       },
       {
+        round: "deadnotice",
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.DeadNotice, data);
+        }
+      },
+      {
         round: "opinion",
         action: (data: any) => {
           RoundService.showModal(RoundModal.Opinion, data);

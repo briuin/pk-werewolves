@@ -5,6 +5,8 @@ export enum RoundModal {
   SeerCheck,
   WitchWork,
   DayBreaks,
+  HunterShot,
+  DeadNotice,
   Opinion,
   PublicVote,
   PublicVoteResult,

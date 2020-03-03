@@ -16,6 +16,8 @@
       @close="end()"
     />
     <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
+    <HunterShot v-if="shouldShow(RoundModal.HunterShot)" :seats="data.seats" />
+    <DeadNotice v-if="shouldShow(RoundModal.DeadNotice)" :seatNo="data.seatNo" />
     <Opinion v-if="shouldShow(RoundModal.Opinion)" />
     <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
     <PublicVoteResult
@@ -32,6 +34,8 @@ import PeerCard from "@/components/round/PeerCard.vue";
 import Wolf from "@/components/round/Wolf.vue";
 import Seer from "@/components/round/Seer.vue";
 import Witch from "@/components/round/Witch.vue";
+import HunterShot from "@/components/round/HunterShot.vue";
+import DeadNotice from "@/components/round/DeadNotice.vue";
 import Opinion from "@/components/round/Opinion.vue";
 import PublicVote from "@/components/round/PublicVote.vue";
 import PublicVoteResult from "@/components/round/PublicVoteResult.vue";
@@ -49,6 +53,8 @@ import { RoundModal } from "@/enums/round-modal";
     Witch,
     GameOver,
     DayBreaks,
+    DeadNotice,
+    HunterShot,
     Opinion,
     PublicVote,
     PublicVoteResult

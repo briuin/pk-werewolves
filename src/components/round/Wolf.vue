@@ -90,7 +90,7 @@ export default class Wolf extends Vue {
   }
 
   isWolf(seatNo: number) {
-    return this.wolves.find(x => x.no === seatNo) || seatNo === 1;
+    return this.wolves.find(x => x.no === seatNo);
   }
 
   vote(seatNo: number) {

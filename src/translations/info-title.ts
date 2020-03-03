@@ -7,6 +7,7 @@ export const getTitle = (title: string) => {
     ["seer", "預言家查驗"],
     ["witch", "女巫救人或下毒"],
     ["daybreaks", "天亮了"],
+    ["deadskill", "啟動角色技能"],
     ["startopinion", "開始發表言論"],
     ["opinion 1", "1號玩家發表言論"],
     ["opinion 2", "2號玩家發表言論"],
@@ -24,5 +25,6 @@ export const getTitle = (title: string) => {
     ["", ""],
     [undefined, ""]
   ];
-  return titles.find(x => x[0] === title)![1]!;
+  const result = titles.find(x => x[0] === title);
+  return (result && result[1]!) || "";
 };
