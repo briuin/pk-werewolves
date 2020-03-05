@@ -32,8 +32,8 @@
                     <v-list-item-subtitle
                       v-if="item.seatNo"
                       v-html="
-                  `<span class='text--primary'>${item.seatNo}號 ${item.name}</span> &mdash; ${item.message}`
-                "
+                        `<span class='text--primary'>${item.seatNo}號 ${item.name}</span> &mdash; ${item.message}`
+                      "
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle v-else v-html="`<b>${item.name}:</b> ${item.message}`"></v-list-item-subtitle>
                   </v-list-item-content>
@@ -45,6 +45,15 @@
       </v-row>
       <v-row>
         <v-col cols="12">
+          <div class="emoji" :class="{ active: isShowEmoji }">
+            <vue-reaction-emoji
+              v-for="emoji in emojiGroup"
+              :key="emoji"
+              ref="emoji"
+              :reaction="emoji"
+              :is-active="true"
+            />
+          </div>
           <v-text-field
             v-model="message"
             append-outer-icon="mdi-send"
@@ -68,11 +77,24 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import PlayerService from "@/services/player";
+import { VueFeedbackReaction, VueReactionEmoji } from "vue-feedback-reaction";
 
-@Component
+@Component({
+  components: {
+    VueFeedbackReaction,
+    VueReactionEmoji
+  }
+})
 export default class Chat extends Vue {
   public messages: any[] = [];
   public message = "";
+  public emoji = "";
+  public emojiGroup = ["hate", "disappointed", "natural", "good", "excellent"];
+  public isShowEmoji = false;
+
+  mounted() {
+    (this.$refs.emoji as any).forEach((x: any) => (x.hoverx = true));
+  }
 
   get chatList() {
     return this.$refs.chats && ((this.$refs.chats as any).$el as HTMLElement);
@@ -87,7 +109,7 @@ export default class Chat extends Vue {
   }
 
   public sendEmoji() {
-    //
+    this.isShowEmoji = !this.isShowEmoji;
   }
 
   public clearMessage() {
@@ -159,6 +181,19 @@ export default class Chat extends Vue {
   .container {
     padding-bottom: 0;
   }
+
+  .emoji {
+    position: absolute;
+    display: flex;
+    left: 25px;
+    width: 0;
+    overflow: hidden;
+    transition: 0.4s linear;
+
+    &.active {
+      width: 275px;
+    }
+  }
 }
 </style>
 
@@ -169,6 +204,27 @@ export default class Chat extends Vue {
   }
   .v-input__control .v-text-field__details {
     display: none;
+  }
+}
+
+.vue-reaction {
+  margin: 0 5px;
+  .h-60 {
+    height: 45px;
+  }
+
+  &:hover .effect {
+    right: 0;
+  }
+}
+
+.vue-feedback-reaction {
+  margin: auto;
+  .reaction {
+    padding: 0;
+    .vue-reaction .effect {
+      animation: pulse 2s;
+    }
   }
 }
 </style>
