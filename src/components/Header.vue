@@ -60,12 +60,12 @@ import { Route } from 'vue-router';
       isPlayerAlive: GameService.isAlive$,
       card: GameService.card$,
       seatNo: GameService.seatNo$,
+      playerName: PlayerService.name$,
     };
   },
 })
 export default class Header extends Vue {
   isHomePage = false;
-  playerName = '';
   isShowCard = false;
   isGameStarted = false;
   isPlayerAlive = false;
@@ -93,12 +93,6 @@ export default class Header extends Vue {
       return;
     }
     this.$router.push('/');
-  }
-
-  protected created() {
-    PlayerService.name$.subscribe((x) => {
-      this.playerName = x;
-    });
   }
 }
 </script>
