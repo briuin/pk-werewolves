@@ -3,9 +3,7 @@
     <v-form>
       <v-container class="modal-container">
         <h1>狼人請殺人</h1>
-        <span class="description">
-          <span></span>是狼人
-        </span>
+        <span class="description"> <span></span>是狼人 </span>
         <v-row justify="center">
           <v-col cols="12" class="vote-group">
             <div
@@ -14,12 +12,18 @@
               :key="'vote' + index"
               @click="vote(option.no)"
             >
-              <SeatChip :no="option.no" :name="option.player.name" :wolf="isWolf(option.no)" />
+              <SeatChip
+                :no="option.no"
+                :name="option.player.name"
+                :wolf="isWolf(option.no)"
+              />
               <span>{{ getSeatVoteTexts(option.no) }}</span>
             </div>
           </v-col>
           <v-col cols="12" class="chat-group" ref="chats">
-            <p class="wolf-chat" v-for="(chat, i) in chats" :key="`chat${i}`">{{ chat }}</p>
+            <p class="wolf-chat" v-for="(chat, i) in chats" :key="`chat${i}`">
+              {{ chat }}
+            </p>
           </v-col>
           <v-col cols="12" style="padding: 0">
             <v-text-field
@@ -47,8 +51,8 @@ import SeatChip from "@/components/ui/SeatChip.vue";
 
 @Component({
   components: {
-    SeatChip
-  }
+    SeatChip,
+  },
 })
 export default class Wolf extends Vue {
   @Prop() seats!: any[];
@@ -72,8 +76,8 @@ export default class Wolf extends Vue {
   getSeatVoteTexts(seatNo: number) {
     return this.wolfVotes
       .map((x, i) => ({ wolfNo: i, targetNo: x }))
-      .filter(x => x.targetNo === seatNo)
-      .map(x => x.wolfNo)
+      .filter((x) => x.targetNo === seatNo)
+      .map((x) => x.wolfNo)
       .join(",");
   }
 
@@ -90,7 +94,7 @@ export default class Wolf extends Vue {
   }
 
   isWolf(seatNo: number) {
-    return this.wolves.find(x => x.no === seatNo);
+    return this.wolves.find((x) => x.no === seatNo);
   }
 
   vote(seatNo: number) {

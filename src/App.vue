@@ -1,151 +1,45 @@
 <template>
   <v-app>
-    <v-app-bar v-if="isGameStarted && !isPlayerAlive" app color="red" dark>
-      <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
-        <span v-if="!isShowCard">
-          <template v-if="seatNo > 0">
-            {{ seatNo }}號
-            <v-icon v-if="isShowCard">mdi-eye</v-icon>
-            <v-icon v-else>mdi-eye-off</v-icon>
-          </template> 陣亡
-        </span>
-        <span v-else>
-          <template v-if="seatNo > 0">
-            {{ seatNo }}號
-            <v-icon v-if="isShowCard">mdi-eye</v-icon>
-            <v-icon v-else>mdi-eye-off</v-icon>
-          </template>
-          {{ card.name }}
-        </span>
-      </div>
-    </v-app-bar>
-    <v-app-bar v-else-if="isGameStarted" app color="#020024" dark>
-      <div class="d-flex align-center margin-auto" @click="isShowCard = !isShowCard">
-        <span v-if="!isShowCard">
-          <template v-if="seatNo > 0">
-            {{ seatNo }}號
-            <v-icon v-if="isShowCard">mdi-eye</v-icon>
-            <v-icon v-else>mdi-eye-off</v-icon>
-          </template>
-          {{ playerName }}
-        </span>
-        <span v-else>
-          <template v-if="seatNo > 0">
-            {{ seatNo }}號
-            <v-icon v-if="isShowCard">mdi-eye</v-icon>
-            <v-icon v-else>mdi-eye-off</v-icon>
-          </template>
-          {{ card.name }}
-        </span>
-      </div>
-    </v-app-bar>
-    <v-app-bar v-else app color="#020024" dark>
-      <div class="d-flex align-center">
-        <span @click="goToHome()">狼人殺</span>
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <template v-if="isHomePage">
-        <v-btn v-if="!isGameStarted" @click="showCancelableDialog()" text>
-          <span class="mr-2">{{ playerName }}</span>
-          <v-icon>mdi-account-edit</v-icon>
-        </v-btn>
-        <v-btn v-else text>
-          <span class="mr-2">{{ playerName }}</span>
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-btn color="red" v-if="!isGameStarted" @click="leaveGame()" text>
-          <span class="mr-2">退出</span>
-        </v-btn>
-      </template>
-    </v-app-bar>
-
+    <app-header></app-header>
     <v-content>
       <router-view />
     </v-content>
-    <NameDialog
-      :options="nameDialogOptions"
-      @confirm="setName($event)"
-      @cancel="showNameDialog = false"
-      v-if="showNameDialog"
-    />
     <Round />
   </v-app>
 </template>
 
 <script lang="ts">
-import NameDialog from "@/components/NameDialog.vue";
-import Round from "@/components/Round.vue";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import PlayerService from "@/services/player";
-import GameService from "@/services/game";
-import { Route } from "vue-router";
+import Round from '@/components/Round.vue';
+import Header from '@/components/Header.vue';
+import NameDialog from '@/components/NameDialog.vue';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
+import { ModalService } from '@/domain/modal';
 
 @Component({
   components: {
-    NameDialog,
-    Round
+    'app-header': Header,
+    Round,
   },
-  subscriptions() {
-    return {
-      isGameStarted: GameService.isStarted$,
-      isPlayerAlive: GameService.isAlive$,
-      card: GameService.card$,
-      seatNo: GameService.seatNo$
-    };
-  }
 })
 export default class App extends Vue {
-  playerName = "";
-  showNameDialog = !this.playerName;
-  nameDialogOptions = {
-    cancelable: false
-  };
-  isShowCard = false;
-  isHomePage = false;
-  isGameStarted = false;
-
-  @Watch("$route", { immediate: true, deep: true })
-  onUrlChange(newRoute: Route) {
-    this.isHomePage = newRoute.name === "home";
-  }
-
-  setName(name: string) {
-    this.showNameDialog = false;
-    if (this.isGameStarted) {
-      return;
-    }
-    PlayerService.setName(name);
-    this.playerName = name;
-  }
-
-  showCancelableDialog() {
-    if (this.isGameStarted) {
-      return;
-    }
-    this.nameDialogOptions.cancelable = true;
-    this.showNameDialog = true;
-  }
-
-  leaveGame() {
-    this.$socket.werewolves.emit("leave");
-    this.goToHome();
-  }
-
-  goToHome() {
-    if (this.$route.path === "/") {
-      return;
-    }
-    this.$router.push("/");
-  }
-
   protected created() {
-    PlayerService.name$.subscribe(x => {
-      this.playerName = x;
-      this.showNameDialog = !x;
-      this.$socket.werewolves.emit("rejoinSession", { name: x });
+    PlayerService.name$.subscribe((x) => {
+      if (!x) {
+        this.showNameDialog();
+      }
+
+      this.$socket.werewolves.emit('rejoinSession', { name: x });
+    });
+  }
+
+  private showNameDialog() {
+    this.$nextTick(() => {
+      ModalService.open(NameDialog, {
+        data: {
+          cancelable: false,
+        },
+      });
     });
   }
 }
@@ -160,19 +54,10 @@ export default class App extends Vue {
 <style lang="scss">
 body {
   background: #00d4ff;
-  background: linear-gradient(
-    180deg,
-    rgba(2, 0, 36, 1) 0%,
-    rgba(9, 6, 64, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(9, 6, 64, 1) 35%, rgba(0, 212, 255, 1) 100%);
 
   .theme--light.v-application {
     background: inherit;
-  }
-
-  .v-app-bar {
-    z-index: 5000 !important;
   }
 }
 </style>
