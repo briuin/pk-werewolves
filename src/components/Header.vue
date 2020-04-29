@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import NameDialog from '@/components/NameDialog.vue';
+import NameDialog from '@/components/modal-content/NameDialog.vue';
 import GameService from '@/services/game';
 import PlayerService from '@/services/player';
 import { ModalService } from '@/domain/modal';

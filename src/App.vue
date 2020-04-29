@@ -11,7 +11,7 @@
 <script lang="ts">
 import Round from '@/components/Round.vue';
 import Header from '@/components/Header.vue';
-import NameDialog from '@/components/NameDialog.vue';
+import NameDialog from '@/components/modal-content/NameDialog.vue';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import PlayerService from '@/services/player';
 import { ModalService } from '@/domain/modal';

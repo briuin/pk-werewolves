@@ -48,10 +48,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import GameService from "@/services/game";
-import PlayerService from "@/services/player";
-import { tap } from "rxjs/operators";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import GameService from '@/services/game';
+import PlayerService from '@/services/player';
+import { tap } from 'rxjs/operators';
 
 @Component({
   subscriptions() {
@@ -59,26 +59,26 @@ import { tap } from "rxjs/operators";
       isOwner: GameService.isOwner$,
       seats: GameService.seats$,
       cards: GameService.assignedCards$.pipe(
-        tap(cards => {
+        tap((cards) => {
           (this as any).cards = cards;
           (this as any).cardsCount.forEach((x: any) => {
             const count = cards.filter((c: any) => c === x.name).length;
             x.count = count;
           });
         })
-      )
+      ),
     };
-  }
+  },
 })
 export default class CardDetails extends Vue {
   @Prop() dark!: boolean;
   seats: any[] = [];
   cardsCount = [
-    { name: "wolf", count: 0, max: 10 },
-    { name: "folk", count: 0, max: 10 },
-    { name: "seer", count: 0, max: 1 },
-    { name: "witch", count: 0, max: 1 },
-    { name: "hunter", count: 0, max: 1 }
+    { name: 'wolf', count: 0, max: 10 },
+    { name: 'folk', count: 0, max: 10 },
+    { name: 'seer', count: 0, max: 1 },
+    { name: 'witch', count: 0, max: 1 },
+    { name: 'hunter', count: 0, max: 1 },
   ];
 
   currentCardPageIndex = 0;
@@ -97,13 +97,13 @@ export default class CardDetails extends Vue {
 
   addCount(card: any) {
     card.count++;
-    this.$socket.werewolves.emit("updateCards", { cards: this.cardsCount });
+    this.$socket.werewolves.emit('updateCards', { cards: this.cardsCount });
     this.updateCards();
   }
 
   minusCount(card: any) {
     card.count--;
-    this.$socket.werewolves.emit("updateCards", { cards: this.cardsCount });
+    this.$socket.werewolves.emit('updateCards', { cards: this.cardsCount });
     this.updateCards();
   }
 
@@ -115,10 +115,7 @@ export default class CardDetails extends Vue {
   }
 
   nextCards() {
-    if (
-      this.cardsCount.length <=
-      this.currentCardPageIndex * this.countPerPage + this.countPerPage
-    ) {
+    if (this.cardsCount.length <= this.currentCardPageIndex * this.countPerPage + this.countPerPage) {
       return;
     }
     this.currentCardPageIndex++;
@@ -126,7 +123,7 @@ export default class CardDetails extends Vue {
 
   private updateCards() {
     const cards: string[] = [];
-    this.cardsCount.forEach(x => {
+    this.cardsCount.forEach((x) => {
       for (let i = 0; i < x.count; i++) {
         cards.push(x.name);
       }

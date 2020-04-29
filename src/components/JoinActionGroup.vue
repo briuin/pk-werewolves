@@ -14,29 +14,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import Sit from "@/components/join-action-group/Sit.vue";
-import Stand from "@/components/join-action-group/Stand.vue";
-import Ready from "@/components/join-action-group/Ready.vue";
-import Start from "@/components/join-action-group/Start.vue";
-import GameService from "@/services/game";
-import { getTitle } from "@/translations/info-title";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Sit from '@/components/join-action-group/Sit.vue';
+import Stand from '@/components/join-action-group/Stand.vue';
+import Ready from '@/components/join-action-group/Ready.vue';
+import Start from '@/components/join-action-group/Start.vue';
+import GameService from '@/services/game';
+import { getTitle } from '@/translations/info-title';
 
 @Component({
   components: {
     Sit,
     Stand,
     Ready,
-    Start
+    Start,
   },
   subscriptions() {
     return {
-      isGameStarted: GameService.isStarted$
+      isGameStarted: GameService.isStarted$,
     };
-  }
+  },
 })
 export default class JoinActionGroup extends Vue {
-  title = "";
+  title = '';
   time = 0;
 
   protected created() {
@@ -44,7 +44,7 @@ export default class JoinActionGroup extends Vue {
   }
 
   private subscribeInfo() {
-    this.sockets.werewolves.subscribe("info", (data: any) => {
+    this.sockets.werewolves.subscribe('info', (data: any) => {
       this.title = getTitle(data.title);
       this.time = data.time;
     });

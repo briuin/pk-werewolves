@@ -16,10 +16,10 @@
           <v-icon v-else>mdi-menu</v-icon>
         </v-btn>
       </template>
-      <v-btn fab dark small color="green" @click="selectedIndex = 1">
+      <v-btn fab dark small color="green" @click="showPlayerDetails()">
         <v-icon>mdi-account-circle</v-icon>
       </v-btn>
-      <v-btn fab dark small color="indigo" @click="selectedIndex = 2">
+      <v-btn fab dark small color="indigo" @click="showCardDetails()">
         <v-icon>mdi-cards</v-icon>
       </v-btn>
     </v-speed-dial>
@@ -29,21 +29,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import PlayerService from "@/services/player";
-import PlayersDetails from "@/components/detail-modal/Players.vue";
-import CardDetails from "@/components/detail-modal/Cards.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
+import PlayersDetails from '@/components/PlayerDetail.vue';
+import CardDetails from '@/components/CardDetails.vue';
+import { ModalService } from '../domain/modal';
 
 @Component({
   components: {
     PlayersDetails,
-    CardDetails
-  }
+    CardDetails,
+  },
 })
 export default class GameList extends Vue {
   selectedIndex = 0;
 
-  direction = "top";
+  direction = 'top';
   fab = false;
   fling = false;
   hover = false;
@@ -52,7 +53,15 @@ export default class GameList extends Vue {
   right = true;
   bottom = true;
   left = false;
-  transition = "slide-y-reverse-transition";
+  transition = 'slide-y-reverse-transition';
+
+  showPlayerDetails() {
+    ModalService.open(PlayersDetails, { overlayCanceling: true, width: '300px' });
+  }
+
+  showCardDetails() {
+    ModalService.open(CardDetails, { overlayCanceling: true, width: '300px' });
+  }
 }
 </script>
 

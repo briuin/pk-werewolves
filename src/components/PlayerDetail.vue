@@ -6,16 +6,9 @@
       </template>
 
       <v-list-item v-for="(player, i) in seats" :key="'ready' + i">
-        <v-list-item-title
-          v-text="player.name + (player.isReady ? ' - 準備就緒' : '')"
-        ></v-list-item-title>
+        <v-list-item-title v-text="player.name + (player.isReady ? ' - 準備就緒' : '')"></v-list-item-title>
         <v-list-item-action>
-          <v-icon
-            v-if="player.isBot"
-            color="red"
-            @click="removeBot(player.name)"
-            >delete</v-icon
-          >
+          <v-icon v-if="player.isBot" color="red" @click="removeBot(player.name)">delete</v-icon>
           <v-icon v-else>account_circle</v-icon>
         </v-list-item-action>
       </v-list-item>
@@ -36,9 +29,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import GameService from "@/services/game";
-import PlayerService from "@/services/player";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import GameService from '@/services/game';
+import PlayerService from '@/services/player';
 
 @Component({
   subscriptions() {
@@ -53,13 +46,11 @@ export default class PlayerDetail extends Vue {
   players: any[] = [];
 
   get observers() {
-    return this.players.filter(
-      (x) => !this.seats.find((s) => s.name === x.name)
-    );
+    return this.players.filter((x) => !this.seats.find((s) => s.name === x.name));
   }
 
   removeBot(name: string) {
-    this.$socket.werewolves.emit("removeBot", { botName: name });
+    this.$socket.werewolves.emit('removeBot', { botName: name });
   }
 }
 </script>

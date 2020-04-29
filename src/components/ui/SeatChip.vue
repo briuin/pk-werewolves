@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class SeatChip extends Vue {
@@ -15,11 +15,11 @@ export default class SeatChip extends Vue {
   @Prop() wolf!: boolean;
 
   get getColor() {
-    return this.wolf ? "pink" : "primary";
+    return this.wolf ? 'pink' : 'primary';
   }
 
   get getTextColor() {
-    return this.wolf ? "white" : "primary";
+    return this.wolf ? 'white' : 'primary';
   }
 
   get outlined() {

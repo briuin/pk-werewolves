@@ -1,18 +1,14 @@
 <template>
-  <sweet-modal
-    ref="modal"
-    :blocking="!_overlayCanceled"
-    :overlay-theme="_overlayTheme"
-    hide-close-button
-    :enable-mobile-fullscreen="false"
-  >
-    <i class="close-btn icon-close" @click="$refs.modal.close()"></i>
+  <sweet-modal ref="modal" :blocking="!_overlayCanceled" :overlay-theme="_overlayTheme" hide-close-button :enable-mobile-fullscreen="false">
+    <div :style="{ width: _width }">
+      <i class="close-btn icon-close" @click="$refs.modal.close()"></i>
+    </div>
   </sweet-modal>
 </template>
 
 <script lang="ts">
-import { SweetModal } from "sweet-modal-vue";
-import { Component, Vue } from "vue-property-decorator";
+import { SweetModal } from 'sweet-modal-vue';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -20,15 +16,15 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class Modal extends Vue {
-  private _overlayTheme = "dark";
-  private _width = "500px";
+  private _overlayTheme = 'dark';
+  private _width = '';
   private _overlayCanceled = false;
 
-  setOverlayTheme(theme: "light" | "dark" = "dark") {
+  setOverlayTheme(theme: 'light' | 'dark' = 'dark') {
     this._overlayTheme = theme;
   }
 
-  setWidth(width: string = "500px") {
+  setWidth(width: string = '') {
     this._width = width;
   }
 

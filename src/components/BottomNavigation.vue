@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation horizontal app grow :class="{'move-front': isGameStarted}">
+  <v-bottom-navigation horizontal app grow :class="{ 'move-front': isGameStarted }">
     <template v-if="isGameStarted">
       <v-btn>
         <span>{{ title }}</span>
@@ -18,30 +18,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import PlayerService from "@/services/player";
-import GameService from "@/services/game";
-import Sit from "@/components/join-action-group/Sit.vue";
-import Stand from "@/components/join-action-group/Stand.vue";
-import Ready from "@/components/join-action-group/Ready.vue";
-import Start from "@/components/join-action-group/Start.vue";
-import { getTitle } from "@/translations/info-title";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
+import GameService from '@/services/game';
+import Sit from '@/components/join-action-group/Sit.vue';
+import Stand from '@/components/join-action-group/Stand.vue';
+import Ready from '@/components/join-action-group/Ready.vue';
+import Start from '@/components/join-action-group/Start.vue';
+import { getTitle } from '@/translations/info-title';
 
 @Component({
   components: {
     Sit,
     Stand,
     Ready,
-    Start
+    Start,
   },
   subscriptions() {
     return {
-      isGameStarted: GameService.isStarted$
+      isGameStarted: GameService.isStarted$,
     };
-  }
+  },
 })
 export default class BottomNavigation extends Vue {
-  public title = "";
+  public title = '';
   public time = 0;
 
   protected created() {
@@ -49,7 +49,7 @@ export default class BottomNavigation extends Vue {
   }
 
   private subscribeInfo() {
-    this.sockets.werewolves.subscribe("info", (data: any) => {
+    this.sockets.werewolves.subscribe('info', (data: any) => {
       this.title = getTitle(data.title);
       this.time = data.time;
     });

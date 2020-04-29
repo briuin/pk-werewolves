@@ -17,7 +17,7 @@
             </v-toolbar>
 
             <v-list ref="chats">
-              <template v-for="(item, index) in messages.filter(x => !x.divider)">
+              <template v-for="(item, index) in messages.filter((x) => !x.divider)">
                 <v-subheader v-if="item.header" :key="item.header + index" v-text="item.header"></v-subheader>
 
                 <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
@@ -31,9 +31,7 @@
                     <v-list-item-title v-if="false" v-html="item.name"></v-list-item-title>
                     <v-list-item-subtitle
                       v-if="item.seatNo"
-                      v-html="
-                        `<span class='text--primary'>${item.seatNo}號 ${item.name}</span> &mdash; ${item.message}`
-                      "
+                      v-html="`<span class='text--primary'>${item.seatNo}號 ${item.name}</span> &mdash; ${item.message}`"
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle v-else v-html="`<b>${item.name}:</b> ${item.message}`"></v-list-item-subtitle>
                   </v-list-item-content>
@@ -46,13 +44,7 @@
       <v-row>
         <v-col cols="12">
           <div class="emoji" :class="{ active: isShowEmoji }">
-            <vue-reaction-emoji
-              v-for="emoji in emojiGroup"
-              :key="emoji"
-              ref="emoji"
-              :reaction="emoji"
-              :is-active="true"
-            />
+            <vue-reaction-emoji v-for="emoji in emojiGroup" :key="emoji" ref="emoji" :reaction="emoji" :is-active="true" />
           </div>
           <v-text-field
             v-model="message"
@@ -75,21 +67,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import PlayerService from "@/services/player";
-import { VueFeedbackReaction, VueReactionEmoji } from "vue-feedback-reaction";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
+import { VueFeedbackReaction, VueReactionEmoji } from 'vue-feedback-reaction';
 
 @Component({
   components: {
     VueFeedbackReaction,
-    VueReactionEmoji
-  }
+    VueReactionEmoji,
+  },
 })
 export default class Chat extends Vue {
   public messages: any[] = [];
-  public message = "";
-  public emoji = "";
-  public emojiGroup = ["hate", "disappointed", "natural", "good", "excellent"];
+  public message = '';
+  public emoji = '';
+  public emojiGroup = ['hate', 'disappointed', 'natural', 'good', 'excellent'];
   public isShowEmoji = false;
 
   mounted() {
@@ -104,7 +96,7 @@ export default class Chat extends Vue {
     if (!this.message) {
       return;
     }
-    this.$socket.werewolves.emit("sendmessage", { message: this.message });
+    this.$socket.werewolves.emit('sendmessage', { message: this.message });
     this.clearMessage();
   }
 
@@ -113,17 +105,17 @@ export default class Chat extends Vue {
   }
 
   public clearMessage() {
-    this.message = "";
+    this.message = '';
   }
 
   protected created() {
     this.messages.push({ header: `房號 ${this.$route.params.id}` });
-    this.sockets.werewolves.subscribe("message", (data: any) => {
+    this.sockets.werewolves.subscribe('message', (data: any) => {
       this.messages.push(
         {
           name: data.name,
           seatNo: data.seatNo,
-          message: data.message
+          message: data.message,
         },
         { divider: true, inset: true }
       );
@@ -135,7 +127,7 @@ export default class Chat extends Vue {
       });
     });
 
-    this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
+    this.sockets.werewolves.subscribe('gamedetails', (data: any) => {
       if (!data.messages) {
         return;
       }

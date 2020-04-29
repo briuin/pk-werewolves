@@ -35,8 +35,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import PlayerService from "@/services/player";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
 
 @Component
 export default class GameList extends Vue {
@@ -45,17 +45,13 @@ export default class GameList extends Vue {
   selectedGame = null;
 
   joinGame(gameId: number) {
-    if (
-      this.games
-        .find(x => x.id === gameId)
-        .players.find((x: any) => x.name === PlayerService.getName())
-    ) {
+    if (this.games.find((x) => x.id === gameId).players.find((x: any) => x.name === PlayerService.getName())) {
       this.$router.push(`/game/${gameId}`);
       return;
     }
-    this.$socket.werewolves.emit("join", {
+    this.$socket.werewolves.emit('join', {
       gameId,
-      playerName: PlayerService.getName()
+      playerName: PlayerService.getName(),
     });
   }
 }
