@@ -24,31 +24,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import SeatChip from "@/components/ui/SeatChip.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import SeatChip from '@/components/ui/SeatChip.vue';
 
 @Component({
   components: {
-    SeatChip
-  }
+    SeatChip,
+  },
 })
 export default class Seer extends Vue {
   @Prop({ default: () => [] }) seats!: any[];
   selectedNo = 0;
-  result = "";
+  result = '';
 
   check(seatNo: number) {
     if (this.selectedNo) {
       return;
     }
     this.selectedNo = seatNo;
-    this.$socket.werewolves.emit("seercheck", { seatNo });
+    this.$socket.werewolves.emit('seercheck', { seatNo });
   }
 
   protected created() {
-    this.sockets.werewolves.subscribe("seercheckresult", (data: any) => {
-      this.result =
-        `${this.selectedNo}號是` + (data.result === "good" ? "好人" : "壞人");
+    this.sockets.werewolves.subscribe('seercheckresult', (data: any) => {
+      this.result = `${this.selectedNo}號是` + (data.result === 'good' ? '好人' : '壞人');
     });
   }
 }

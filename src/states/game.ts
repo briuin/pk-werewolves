@@ -1,4 +1,4 @@
-import Card from "@/models/card";
+import Card from '@/models/card';
 
 const state = {
   isStarted: false,
@@ -8,13 +8,17 @@ const state = {
   isOwner: false,
   seats: [],
   players: [],
-  assignedCards: []
+  assignedCards: [],
+  games: [],
+  time: 0,
+  title: '',
+  seatedPlayers: [],
 };
 
 const service = {
   get() {
     return state;
-  }
+  },
 };
 
 export default service;

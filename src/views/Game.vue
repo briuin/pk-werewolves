@@ -12,13 +12,13 @@
       ></v-badge>
     </div>
     <div class="player-detail-mobile">
-      人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
-      {{ players.length - seatedPlayers.length }}
+      人數： {{ isReadyPlayers.length }} / {{ seats.length }} /
+      {{ players.length - seats.length }}
     </div>
     <div class="player-detail-desktop">
       <div class="count-title">
-        人數： {{ isReadyPlayers.length }} / {{ seatedPlayers.length }} /
-        {{ players.length - seatedPlayers.length }}
+        人數： {{ isReadyPlayers.length }} / {{ seats.length }} /
+        {{ players.length - seats.length }}
       </div>
       <div class="player-group">
         <h5>就坐玩家 ({{ seats.length }})</h5>
@@ -75,20 +75,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import PlayerService from "@/services/player";
-import GameService from "@/services/game";
-import RoundService from "@/services/round";
-import Card from "@/models/card";
-import CardFactory from "@/models/card-factory";
-import RoundWolf from "@/components/round/Wolf.vue";
-import GameOver from "@/components/round/GameOver.vue";
-import BottomNavigation from "@/components/BottomNavigation.vue";
-import Chat from "@/components/Chat.vue";
-import FloatingMenu from "@/components/FloatingMenu.vue";
-import JoinActionGroup from "@/components/JoinActionGroup.vue";
-import PlayerDetail from "@/components/PlayerDetail.vue";
-import CardDetails from "@/components/CardDetails.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import PlayerService from '@/services/player';
+import GameService from '@/services/game';
+import RoundService from '@/services/round';
+import Card from '@/models/card';
+import CardFactory from '@/models/card-factory';
+import RoundWolf from '@/components/round/Wolf.vue';
+import GameOver from '@/components/round/GameOver.vue';
+import BottomNavigation from '@/components/BottomNavigation.vue';
+import Chat from '@/components/Chat.vue';
+import FloatingMenu from '@/components/FloatingMenu.vue';
+import JoinActionGroup from '@/components/JoinActionGroup.vue';
+import PlayerDetail from '@/components/PlayerDetail.vue';
+import CardDetails from '@/components/CardDetails.vue';
 
 @Component({
   components: {
@@ -99,7 +99,7 @@ import CardDetails from "@/components/CardDetails.vue";
     FloatingMenu,
     JoinActionGroup,
     PlayerDetail,
-    CardDetails
+    CardDetails,
   },
   subscriptions() {
     return {
@@ -107,89 +107,32 @@ import CardDetails from "@/components/CardDetails.vue";
       isStarted: GameService.isStarted$,
       isOwner: GameService.isOwner$,
       seats: GameService.seats$,
-      players: GameService.players$
+      players: GameService.players$,
     };
-  }
+  },
 })
 export default class Game extends Vue {
   card: Card = new Card();
   players: any[] = [];
-  seatedPlayers: any[] = [];
+  seats: any[] = [];
 
   get observers() {
-    return this.players.filter(
-      x => !this.seatedPlayers.find(s => s.name === x.name)
-    );
+    return this.players.filter((x) => !this.seats.find((s) => s.name === x.name));
   }
 
   get isReadyPlayers() {
-    return this.seatedPlayers.filter(x => x.isReady);
+    return this.seats.filter((x) => x.isReady);
   }
 
   isReady(name: string) {
-    return !!this.isReadyPlayers.find(x => x.name === name);
+    return !!this.isReadyPlayers.find((x) => x.name === name);
   }
 
   protected created() {
-    this.sockets.werewolves.subscribe("gamedetails", (data: any) => {
-      if (data.error) {
-        this.$router.push("/");
-        return;
-      }
-      if (data.isStarted) {
-        GameService.start();
-      }
-      GameService.peerCard(data.seatNo, data.card);
-      GameService.setOwner(data.owner);
-      GameService.setCards(data.cards);
-    });
-
     const id = this.$route.params.id;
-    this.$socket.werewolves.emit("gamedetails", {
+    this.$socket.werewolves.emit('gamedetails', {
       id,
-      playerName: PlayerService.getName()
-    });
-    this.subscribeGameStart();
-    this.subscribePlayers();
-    this.subscribeRound();
-    this.subscribeNewGame();
-    this.sockets.werewolves.subscribe("dead", (data: any) => {
-      GameService.beKilled();
-    });
-    this.sockets.werewolves.subscribe("cards", (data: any) => {
-      GameService.setCards(data.cards);
-    });
-  }
-
-  private subscribeGameStart() {
-    this.sockets.werewolves.subscribe("peercard", (data: any) => {
-      GameService.peerCard(data.seatNo, data.card);
-    });
-
-    this.sockets.werewolves.subscribe("start", (data: any) => {
-      GameService.start();
-    });
-  }
-
-  private subscribePlayers() {
-    this.sockets.werewolves.subscribe("players", (data: any) => {
-      GameService.updatePlayers({
-        seatedPlayers: data.seatedPlayers,
-        players: data.players
-      });
-      this.seatedPlayers = data.seatedPlayers;
-    });
-  }
-
-  private subscribeRound() {
-    this.sockets.werewolves.subscribe("round", (data: any) => {
-      this.card.onRound(data.name, data);
-    });
-  }
-
-  private subscribeNewGame() {
-    this.sockets.werewolves.subscribe("newgame", () => {
-      GameService.reset();
+      playerName: PlayerService.getName(),
     });
   }
 }

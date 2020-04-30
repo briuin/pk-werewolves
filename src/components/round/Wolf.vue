@@ -6,17 +6,8 @@
         <span class="description"> <span></span>是狼人 </span>
         <v-row justify="center">
           <v-col cols="12" class="vote-group">
-            <div
-              class="vote-option"
-              v-for="(option, index) in voteOptions"
-              :key="'vote' + index"
-              @click="vote(option.no)"
-            >
-              <SeatChip
-                :no="option.no"
-                :name="option.player.name"
-                :wolf="isWolf(option.no)"
-              />
+            <div class="vote-option" v-for="(option, index) in voteOptions" :key="'vote' + index" @click="vote(option.no)">
+              <SeatChip :no="option.no" :name="option.player.name" :wolf="isWolf(option.no)" />
               <span>{{ getSeatVoteTexts(option.no) }}</span>
             </div>
           </v-col>
@@ -46,8 +37,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import SeatChip from "@/components/ui/SeatChip.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import SeatChip from '@/components/ui/SeatChip.vue';
 
 @Component({
   components: {
@@ -59,7 +50,7 @@ export default class Wolf extends Vue {
   @Prop({ default: () => [] }) wolves!: any[];
   wolfVotes: number[] = [];
   chats = [];
-  message = "";
+  message = '';
 
   get voteOptions() {
     return this.seats || [];
@@ -78,19 +69,19 @@ export default class Wolf extends Vue {
       .map((x, i) => ({ wolfNo: i, targetNo: x }))
       .filter((x) => x.targetNo === seatNo)
       .map((x) => x.wolfNo)
-      .join(",");
+      .join(',');
   }
 
   sendMessage() {
     if (!this.message) {
       return;
     }
-    this.$socket.werewolves.emit("sendwolftalk", { message: this.message });
+    this.$socket.werewolves.emit('sendwolftalk', { message: this.message });
     this.clearMessage();
   }
 
   clearMessage() {
-    this.message = "";
+    this.message = '';
   }
 
   isWolf(seatNo: number) {
@@ -98,15 +89,15 @@ export default class Wolf extends Vue {
   }
 
   vote(seatNo: number) {
-    this.$socket.werewolves.emit("wolfvote", { seatNo });
+    this.$socket.werewolves.emit('wolfvote', { seatNo });
   }
 
   protected created() {
-    this.sockets.werewolves.subscribe("wolfvote", (data: any) => {
+    this.sockets.werewolves.subscribe('wolfvote', (data: any) => {
       this.$set(this.wolfVotes, data.wolfSeatNo, data.targetSeatNo);
     });
 
-    this.sockets.werewolves.subscribe("wolftalk", (data: any) => {
+    this.sockets.werewolves.subscribe('wolftalk', (data: any) => {
       this.chats = data.messages;
       Vue.nextTick(() => {
         if (this.chatElement) {

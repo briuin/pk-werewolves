@@ -14,10 +14,18 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import GameList from '@/components/GameList.vue';
 import PlayerService from '@/services/player';
+import GameService from '@/services/game';
+import { tap } from 'rxjs/operators';
 
 @Component({
   components: {
     GameList,
+  },
+  subscriptions() {
+    return {
+      playerName: PlayerService.name$,
+      games: GameService.games$,
+    };
   },
 })
 export default class Home extends Vue {
@@ -42,15 +50,6 @@ export default class Home extends Vue {
   }
 
   protected created() {
-    PlayerService.name$.subscribe((x) => (this.playerName = x));
-
-    this.sockets.werewolves.subscribe('games', (games: any) => {
-      this.games = games;
-    });
-
-    this.sockets.werewolves.subscribe('goto', (gameId: any) => {
-      this.$router.push(`/game/${gameId}`);
-    });
     this.$socket.werewolves.emit('getGames');
   }
 }

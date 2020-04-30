@@ -1,11 +1,12 @@
-import { BehaviorSubject } from "rxjs";
-import GameState from "@/states/game";
-import Card from "@/models/card";
-import CardFactory from "@/models/card-factory";
-import PlayerService from "@/services/player";
+import { BehaviorSubject } from 'rxjs';
+import GameState from '@/states/game';
+import Card from '@/models/card';
+import CardFactory from '@/models/card-factory';
+import PlayerService from '@/services/player';
 const game = GameState.get();
 
 class GameService {
+  public games$ = new BehaviorSubject<any[]>(game.games);
   public card$ = new BehaviorSubject<Card>(game.card);
   public isAlive$ = new BehaviorSubject<boolean>(game.isAlive);
   public isStarted$ = new BehaviorSubject<boolean>(game.isStarted);
@@ -13,7 +14,10 @@ class GameService {
   public isOwner$ = new BehaviorSubject<boolean>(game.isOwner);
   public seats$ = new BehaviorSubject<any[]>(game.seats);
   public players$ = new BehaviorSubject<any[]>(game.players);
+  public seatedPlayers$ = new BehaviorSubject<any[]>(game.seatedPlayers);
   public assignedCards$ = new BehaviorSubject<any[]>(game.assignedCards);
+  public time$ = new BehaviorSubject<number>(game.time);
+  public title$ = new BehaviorSubject<string>(game.title);
 
   public beKilled() {
     this.isAlive$.next(false);
@@ -36,7 +40,7 @@ class GameService {
     this.isStarted$.next(true);
   }
 
-  public peerCard(seatNo = 0, card = "") {
+  public peerCard(seatNo = 0, card = '') {
     this.card$.next(CardFactory.create(card));
     this.seatNo$.next(seatNo);
   }

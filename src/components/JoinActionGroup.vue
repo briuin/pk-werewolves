@@ -32,23 +32,14 @@ import { getTitle } from '@/translations/info-title';
   subscriptions() {
     return {
       isGameStarted: GameService.isStarted$,
+      title: GameService.title$,
+      time: GameService.time$,
     };
   },
 })
 export default class JoinActionGroup extends Vue {
   title = '';
   time = 0;
-
-  protected created() {
-    this.subscribeInfo();
-  }
-
-  private subscribeInfo() {
-    this.sockets.werewolves.subscribe('info', (data: any) => {
-      this.title = getTitle(data.title);
-      this.time = data.time;
-    });
-  }
 }
 </script>
 

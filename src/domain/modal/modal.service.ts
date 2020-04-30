@@ -1,18 +1,12 @@
-import Modal from "./modal.vue";
-import { Component } from "vue";
-import { Vue } from "vue-property-decorator";
-import { CombinedVueInstance } from "vue/types/vue";
-import ModalOptions from "./modal-option";
-import ModalRef from "./modal-ref";
-import { SweetModal } from "sweet-modal-vue";
+import Modal from './modal.vue';
+import { Component } from 'vue';
+import { Vue } from 'vue-property-decorator';
+import { CombinedVueInstance } from 'vue/types/vue';
+import ModalOptions from './modal-option';
+import ModalRef from './modal-ref';
+import { SweetModal } from 'sweet-modal-vue';
 
-type ComponentInstance = CombinedVueInstance<
-  Record<never, any> & Vue,
-  object,
-  object,
-  object,
-  Record<never, any>
->;
+type ComponentInstance = CombinedVueInstance<Record<never, any> & Vue, object, object, object, Record<never, any>>;
 
 class ModalService {
   private openedModal: ModalRef[] = [];
@@ -26,14 +20,12 @@ class ModalService {
     const modalInstance = this.mountModalComponent(options) as SweetModal;
     const contentInstance = this.mountModalContentComponent(modal, options);
 
-    modalInstance.$el
-      .querySelector(".sweet-content")!
-      .appendChild(contentInstance.$el);
+    modalInstance.$el.querySelector('.sweet-content')!.appendChild(contentInstance.$el);
     this.container.appendChild(modalInstance.$el);
     const ref = modalInstance.$refs.modal as SweetModal;
-    ref.$once("close", () => this.close(modalInstance));
+    ref.$once('close', () => this.close(modalInstance));
     ref.open();
-    contentInstance.$once("close", () => ref.close());
+    contentInstance.$once('close', () => ref.close());
     const modalRef = new ModalRef(modalInstance);
     this.openedModal.push(modalRef);
     return modalRef;
@@ -59,10 +51,7 @@ class ModalService {
     return modalInstance;
   }
 
-  private mountModalContentComponent<T>(
-    modal: Component,
-    options: any
-  ): ComponentInstance {
+  private mountModalContentComponent<T>(modal: Component, options: any): ComponentInstance {
     const ModalContentComponent = Vue.extend(modal as any);
     const contentInstance = new ModalContentComponent(this.vueInstanceOptions);
     contentInstance.$mount();
