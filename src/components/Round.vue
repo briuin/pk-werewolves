@@ -8,7 +8,7 @@
     <DayBreaks v-if="shouldShow(RoundModal.DayBreaks)" :diedPlayers="data.seatsNo" />
     <HunterShot v-if="shouldShow(RoundModal.HunterShot)" :seats="data.seats" />
     <DeadNotice v-if="shouldShow(RoundModal.DeadNotice)" :seatNo="data.seatNo" />
-    <Opinion v-if="shouldShow(RoundModal.Opinion)" />
+    <Opinion v-if="shouldShow(RoundModal.Opinion)" :seats="data.seats" />
     <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
     <PublicVoteResult v-if="shouldShow(RoundModal.PublicVoteResult)" :diedSeatNos="data.diedSeatNos" :isSecondVote="data.isSecondVote" />
   </div>
