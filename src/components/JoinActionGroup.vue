@@ -7,7 +7,7 @@
       <Start />
     </template>
     <div v-else class="round-info">
-      <div>{{ title }}</div>
+      <div>{{ $t(`game.title.${title}`) }}</div>
       <div>{{ time }}</div>
     </div>
   </div>
@@ -20,7 +20,6 @@ import Stand from '@/components/join-action-group/Stand.vue';
 import Ready from '@/components/join-action-group/Ready.vue';
 import Start from '@/components/join-action-group/Start.vue';
 import GameService from '@/services/game';
-import { getTitle } from '@/translations/info-title';
 
 @Component({
   components: {

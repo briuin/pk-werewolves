@@ -5,6 +5,7 @@ import VueSocketIO from 'vue-socket.io';
 import vuetify from './plugins/vuetify';
 import VueRx from 'vue-rx';
 import { ModalService } from '@/domain/modal';
+import i18n from './i18n';
 
 Vue.use(VueRx);
 Vue.config.productionTip = false;
@@ -18,6 +19,7 @@ Vue.use(
 );
 
 const options = {
+  i18n,
   vuetify,
 };
 

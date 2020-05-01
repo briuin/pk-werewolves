@@ -7,7 +7,7 @@
             <h4>請確認身份</h4>
           </v-col>
           <v-col>
-            <h1>{{ getCardText() }}</h1>
+            <h1>{{ $t(`card.${card}`) }}</h1>
           </v-col>
         </v-row>
       </v-container>
@@ -16,27 +16,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import Card from "@/models/card";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import Card from '@/models/card';
 
 @Component
 export default class PeerCard extends Vue {
   @Prop() card!: string;
-
-  getCardText() {
-    switch (this.card) {
-      case "wolf":
-        return "狼人";
-      case "folk":
-        return "平民";
-      case "seer":
-        return "預言家";
-      case "witch":
-        return "女巫";
-      default:
-        return "";
-    }
-  }
 }
 </script>
 

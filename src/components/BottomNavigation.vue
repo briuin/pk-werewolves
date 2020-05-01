@@ -2,7 +2,7 @@
   <v-bottom-navigation horizontal app grow :class="{ 'move-front': isGameStarted }">
     <template v-if="isGameStarted">
       <v-btn>
-        <span>{{ title }}</span>
+        <span>{{ $t(`game.title.${title}`) }}</span>
       </v-btn>
       <v-btn v-if="time">
         <span>{{ time }}</span>
@@ -25,7 +25,6 @@ import Sit from '@/components/join-action-group/Sit.vue';
 import Stand from '@/components/join-action-group/Stand.vue';
 import Ready from '@/components/join-action-group/Ready.vue';
 import Start from '@/components/join-action-group/Start.vue';
-import { getTitle } from '@/translations/info-title';
 
 @Component({
   components: {

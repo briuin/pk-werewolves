@@ -1,6 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
 import GameService from '@/services/game';
-import { getTitle } from '@/translations/info-title';
 
 @Component({})
 export default class SocketMixin extends Vue {
@@ -58,7 +57,7 @@ export default class SocketMixin extends Vue {
     });
 
     this.sockets.werewolves.subscribe('info', (data: any) => {
-      GameService.title$.next(getTitle(data.title));
+      GameService.title$.next(data.title);
       GameService.time$.next(data.time);
     });
   }
