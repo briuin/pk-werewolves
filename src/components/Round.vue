@@ -11,6 +11,7 @@
     <Opinion v-if="shouldShow(RoundModal.Opinion)" :seats="data.seats" />
     <PublicVote v-if="shouldShow(RoundModal.PublicVote)" :seats="data.seats" />
     <PublicVoteResult v-if="shouldShow(RoundModal.PublicVoteResult)" :diedSeatNos="data.diedSeatNos" :isSecondVote="data.isSecondVote" />
+    <LastWord v-if="shouldShow(RoundModal.LastWord)" />
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import DeadNotice from '@/components/round/DeadNotice.vue';
 import Opinion from '@/components/round/Opinion.vue';
 import PublicVote from '@/components/round/PublicVote.vue';
 import PublicVoteResult from '@/components/round/PublicVoteResult.vue';
+import LastWord from '@/components/round/LastWord.vue';
 import GameOver from '@/components/round/GameOver.vue';
 import DayBreaks from '@/components/round/DayBreaks.vue';
 import RoundService from '@/services/round';
@@ -44,6 +46,7 @@ import { RoundModal } from '@/enums/round-modal';
     Opinion,
     PublicVote,
     PublicVoteResult,
+    LastWord,
   },
   subscriptions() {
     return {

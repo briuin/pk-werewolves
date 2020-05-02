@@ -1,53 +1,59 @@
-import RoundService from "@/services/round";
-import { RoundModal } from "@/enums/round-modal";
+import RoundService from '@/services/round';
+import { RoundModal } from '@/enums/round-modal';
 
 export default class Card {
-  public name = "";
+  public name = '';
   protected roundActionMapping: { round: string; action: Function }[] = [];
 
   constructor() {
     this.roundActionMapping.push(
       {
-        round: "peercard",
+        round: 'peercard',
         action: (data: any) => {
           RoundService.showModal(RoundModal.PeerCard, data);
-        }
+        },
       },
       {
-        round: "daybreaks",
+        round: 'daybreaks',
         action: (data: any) => {
           RoundService.showModal(RoundModal.DayBreaks, data);
-        }
+        },
       },
       {
-        round: "deadnotice",
+        round: 'deadnotice',
         action: (data: any) => {
           RoundService.showModal(RoundModal.DeadNotice, data);
-        }
+        },
       },
       {
-        round: "opinion",
+        round: 'opinion',
         action: (data: any) => {
           RoundService.showModal(RoundModal.Opinion, data);
-        }
+        },
       },
       {
-        round: "publicvote",
+        round: 'publicvote',
         action: (data: any) => {
           RoundService.showModal(RoundModal.PublicVote, data);
-        }
+        },
       },
       {
-        round: "publicvoteresult",
+        round: 'publicvoteresult',
         action: (data: any) => {
           RoundService.showModal(RoundModal.PublicVoteResult, data);
-        }
+        },
       },
       {
-        round: "gameover",
+        round: 'lastword',
+        action: (data: any) => {
+          RoundService.showModal(RoundModal.LastWord, data);
+        },
+      },
+      {
+        round: 'gameover',
         action: (data: any) => {
           RoundService.showModal(RoundModal.GameOver, data);
-        }
+        },
       }
     );
   }
@@ -61,10 +67,10 @@ export default class Card {
   }
 
   protected hasActionInRound(round: String): boolean {
-    return !!this.roundActionMapping.find(x => x.round === round);
+    return !!this.roundActionMapping.find((x) => x.round === round);
   }
 
   protected doActionInRound(round: String, data = {}): boolean {
-    return this.roundActionMapping.find(x => x.round === round)!.action(data);
+    return this.roundActionMapping.find((x) => x.round === round)!.action(data);
   }
 }

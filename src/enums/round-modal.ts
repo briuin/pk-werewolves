@@ -10,5 +10,6 @@ export enum RoundModal {
   Opinion,
   PublicVote,
   PublicVoteResult,
-  GameOver
+  LastWord,
+  GameOver,
 }

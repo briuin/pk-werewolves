@@ -3,7 +3,8 @@
     "wolf": "狼人",
     "folk": "平民",
     "seer": "預言家",
-    "witch": "女巫"
+    "witch": "女巫",
+    "hunter": "獵人"
   },
   "game": {
     "title": {
@@ -28,6 +29,7 @@
       "opinion 10": "10號玩家發表言論",
       "publicvote": "投票",
       "publicvoteresult": "投票結果",
+      "lastword": "發表遺言",
       "gameover": "遊戲結束"
     }
   }

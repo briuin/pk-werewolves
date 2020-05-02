@@ -1,9 +1,18 @@
 import { Component, Vue } from 'vue-property-decorator';
 import GameService from '@/services/game';
+import { ModalService } from '../modal';
+import Loading from '@/components/modal-content/Loading.vue';
 
 @Component({})
 export default class SocketMixin extends Vue {
   protected created() {
+    this.$nextTick(() => {
+      const loadingModal = ModalService.open(Loading);
+      this.sockets.werewolves.subscribe('connect', (games: any) => {
+        loadingModal.close();
+      });
+    });
+
     this.sockets.werewolves.subscribe('games', (games: any) => {
       GameService.games$.next(games);
     });

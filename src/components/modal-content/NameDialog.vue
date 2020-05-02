@@ -31,13 +31,21 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import PlayerService from '@/services/player';
+import GameService from '@/services/game';
 
-@Component
+@Component({
+  subscriptions() {
+    return {
+      isGameStarted: GameService.isStarted$,
+    };
+  },
+})
 export default class NameDialog extends Vue {
   data = {
     cancelable: false,
   };
   @Prop() options: any;
+  isGameStarted = false;
   name = PlayerService.getName();
   confirm() {
     if (!this.name || this.name.length > 30) {
@@ -48,9 +56,9 @@ export default class NameDialog extends Vue {
 
   setName(name: string) {
     this.$emit('close');
-    // if (this.isGameStarted) {
-    //  return;
-    // }
+    if (this.isGameStarted) {
+      return;
+    }
     PlayerService.setName(name);
   }
 }

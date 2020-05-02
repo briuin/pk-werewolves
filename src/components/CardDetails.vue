@@ -13,7 +13,7 @@
         :thumb-size="24"
         thumb-label="always"
         :max="card.max"
-        :label="card.name"
+        :label="$t(`card.${card.name}`)"
       ></v-slider>
       <v-slider
         v-else
@@ -23,7 +23,7 @@
         :thumb-size="24"
         thumb-label="always"
         :max="card.max"
-        :label="card.name"
+        :label="$t(`card.${card.name}`)"
       ></v-slider>
     </v-card-text>
     <div class="card-content">
