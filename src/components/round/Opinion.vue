@@ -72,6 +72,7 @@ export default class Opinion extends Vue {
   myOpinions = [];
   opinionActions = ['金水', '銀水', '查殺', '表水', '划水', '踩'];
   selectedOpinionActions = '';
+  skipped = false;
 
   get options() {
     if (!this.selectedOpinionActions) {
@@ -88,6 +89,10 @@ export default class Opinion extends Vue {
   }
 
   skip() {
+    if (this.skipped) {
+      return;
+    }
+    this.skipped = true;
     this.$socket.werewolves.emit('skipopinion');
   }
 
