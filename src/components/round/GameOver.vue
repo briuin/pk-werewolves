@@ -16,9 +16,7 @@
                     <v-icon v-text="seat.seatNo"></v-icon>
                   </v-list-item-icon>
                   <v-list-item-content>
-                    <v-list-item-title
-                      v-text="`${seat.seatNo}號 ${getCardText(seat.card)} ${seat.playerName}`"
-                    ></v-list-item-title>
+                    <v-list-item-title v-text="`${seat.seatNo}號 ${$t(`card.${seat.card}`)} ${seat.playerName}`"></v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -31,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class GameOver extends Vue {
@@ -39,24 +37,7 @@ export default class GameOver extends Vue {
   @Prop() gameWin!: boolean;
 
   get title() {
-    return this.gameWin ? "好人贏了" : "狼人贏了";
-  }
-
-  getCardText(text: string) {
-    switch (text) {
-      case "wolf":
-        return "狼人";
-      case "folk":
-        return "平民";
-      case "seer":
-        return "預言家";
-      case "witch":
-        return "女巫";
-      case "hunter":
-        return "獵人";
-      default:
-        return "";
-    }
+    return this.gameWin ? '好人贏了' : '狼人贏了';
   }
 }
 </script>

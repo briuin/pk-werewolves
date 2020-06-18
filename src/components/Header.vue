@@ -16,7 +16,7 @@
           <v-icon v-if="isShowCard">mdi-eye</v-icon>
           <v-icon v-else>mdi-eye-off</v-icon>
         </template>
-        {{ card.name }}
+        {{ $t(`card.${card.name}`) }}
       </span>
       <v-spacer></v-spacer>
     </div>
