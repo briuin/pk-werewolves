@@ -1,29 +1,6 @@
-# pk-werewolves
+# 線上狼人殺 Werewolves
 
-## Project setup
-```
-yarn install
-```
+## Demo
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+[Link](https://briuin.github.io/pk-werewolves/)
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
