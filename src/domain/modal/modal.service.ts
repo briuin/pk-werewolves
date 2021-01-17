@@ -37,7 +37,7 @@ class ModalService {
   }
 
   private close(instance: ComponentInstance) {
-    this.openedModal.filter((x) => x !== instance);
+    this.openedModal.filter((x) => x as any !== instance);
   }
 
   private mountModalComponent<T>(options: ModalOptions<T>): ComponentInstance {

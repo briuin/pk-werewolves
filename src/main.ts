@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import {createApp} from 'vue';
 import App from './App.vue';
 import router from './router';
 import VueSocketIO from 'vue-socket.io';
@@ -7,10 +7,20 @@ import VueRx from 'vue-rx';
 import { ModalService } from '@/domain/modal';
 import i18n from './i18n';
 
-Vue.use(VueRx);
-Vue.config.productionTip = false;
+const options = {
+  i18n,
+  vuetify,
+};
 
-Vue.use(
+const vm = createApp({
+  ...options,
+  router,
+  render: (h: any) => h(App),
+});
+
+vm.use(VueRx as any);
+
+vm.use(
   new VueSocketIO({
     connection: process.env.NODE_ENV === 'production' ? 'https://pk-center.herokuapp.com/werewolves' : 'http://localhost:3000/werewolves',
     options: { useConnectionNamespace: true },
@@ -18,15 +28,6 @@ Vue.use(
   })
 );
 
-const options = {
-  i18n,
-  vuetify,
-};
+const app = vm.mount("#app");
 
-const vm = new Vue({
-  ...options,
-  router,
-  render: (h) => h(App),
-}).$mount('#app');
-
-ModalService.setContainer(vm.$root.$el, options);
+ModalService.setContainer(app.$root!.$el, options);
